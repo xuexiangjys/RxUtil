@@ -21,5 +21,6 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support:appcompat-v7:26.1.0'
-    implementation project(':rxutil')
+//    implementation project(':rxutil')
+    implementation 'com.github.xuexiangjys:RxUtil:0.0.1'
 }
