@@ -18,6 +18,8 @@ package com.xuexiang.rxutil.rxbus;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.xuexiang.rxutil.SimpleThrowableAction;
+
 import java.util.concurrent.ConcurrentHashMap;
 
 import rx.Observable;
@@ -70,12 +72,7 @@ public class RxBusUtils {
      * @param action1   订阅动作
      */
     public <T> SubscribeInfo<T> onMainThread(Object eventName, Action1<T> action1) {
-        return onMainThread(eventName, action1, new Action1<Throwable>() {
-            @Override
-            public void call(Throwable throwable) {
-                Log.e(TAG, "订阅发生错误：" + Log.getStackTraceString(throwable));
-            }
-        });
+        return onMainThread(eventName, action1, new SimpleThrowableAction(TAG));
     }
 
     /**
@@ -100,12 +97,7 @@ public class RxBusUtils {
      * @param action1   订阅动作
      */
     public <T> SubscribeInfo<T> on(Object eventName, Action1<T> action1) {
-        return on(eventName, action1, new Action1<Throwable>() {
-            @Override
-            public void call(Throwable throwable) {
-                Log.e(TAG, "订阅发生错误：" + Log.getStackTraceString(throwable));
-            }
-        });
+        return on(eventName, action1, new SimpleThrowableAction(TAG));
     }
 
     /**

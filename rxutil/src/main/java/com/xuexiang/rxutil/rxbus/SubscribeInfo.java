@@ -25,7 +25,7 @@ import rx.Subscription;
  * @author xuexiang
  * @date 2018/3/3 下午11:43
  */
-public class SubscribeInfo<T> {
+public final class SubscribeInfo<T> {
     /**
      * 订阅者
      */

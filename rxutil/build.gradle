@@ -27,6 +27,9 @@ dependencies {
     implementation 'com.android.support:appcompat-v7:26.1.0'
     implementation 'io.reactivex:rxjava:1.2.9'
     implementation 'io.reactivex:rxandroid:1.2.1'
+
+    //rxbinding的sdk
+    implementation 'com.jakewharton.rxbinding:rxbinding:1.0.0'
 }
 
 apply from: "../JitPackUpload.gradle"
