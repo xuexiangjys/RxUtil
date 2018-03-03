@@ -27,15 +27,22 @@ import android.support.annotation.NonNull;
 
 /**
  * RxBus事件通知工具
+ *
  * @author xuexiang
  * @date 2018/3/1 上午10:30
  */
 public class RxBus {
-    private ConcurrentHashMap<Object, List<Subject>> maps = new ConcurrentHashMap<Object, List<Subject>>();
+
+    /**
+     * 事件订阅的注册池， Key：事件名， value：事件的订阅者（事件的消费者、目标）
+     */
+    private ConcurrentHashMap<Object, List<Subject>> maps = new ConcurrentHashMap<>();
+
     private static RxBus sInstance;
 
     /**
      * 获取RxBus的实例
+     *
      * @return
      */
     public static RxBus get() {
@@ -50,26 +57,16 @@ public class RxBus {
     }
 
     /**
-     * 简单以对象的类名注册
+     * 注册事件的订阅
      *
-     * @param tag 类对象
-     * @return
+     * @param eventName 事件名
+     * @return 订阅者
      */
-    public <T> Observable<T> simpleRegister(@NonNull Object tag) {
-        return register(tag.getClass().getSimpleName());
-    }
-
-    /**
-     * 注册订阅
-     *
-     * @param tag 注册标识
-     * @return
-     */
-    public <T> Observable<T> register(@NonNull Object tag) {
-        List<Subject> subjects = maps.get(tag);
+    public <T> Observable<T> register(@NonNull Object eventName) {
+        List<Subject> subjects = maps.get(eventName);
         if (subjects == null) {
             subjects = new ArrayList<>();
-            maps.put(tag, subjects);
+            maps.put(eventName, subjects);
         }
         Subject<T, T> subject = PublishSubject.<T>create();
         subjects.add(subject);
@@ -77,54 +74,54 @@ public class RxBus {
     }
 
     /**
-     * 注销tag制定的订阅
+     * 注销事件指定的订阅者
      *
-     * @param tag        注册标识
-     * @param observable 被观察者
+     * @param eventName  事件名
+     * @param observable 需要取消的订阅者
      */
-    public void unregister(@NonNull Object tag, @NonNull Observable observable) {
-        List<Subject> subjects = maps.get(tag);
+    public void unregister(@NonNull Object eventName, @NonNull Observable observable) {
+        List<Subject> subjects = maps.get(eventName);
         if (subjects != null) {
             subjects.remove(observable);
             if (subjects.isEmpty()) {
-                maps.remove(tag);
+                maps.remove(eventName);
             }
         }
     }
 
     /**
-     * 注销tag所有的订阅
+     * 注销事件所有的订阅（注销事件）
      *
-     * @param tag 注册标识
+     * @param eventName 事件名
      */
-    public void unregisterAll(@NonNull Object tag) {
-        List<Subject> subjects = maps.get(tag);
+    public void unregisterAll(@NonNull Object eventName) {
+        List<Subject> subjects = maps.get(eventName);
         if (subjects != null) {
-            maps.remove(tag);
+            maps.remove(eventName);
         }
     }
 
     /**
-     * 发送指定tag的事件(不带内容)
+     * 发送指定的事件(不携带数据)
      *
-     * @param tag 注册标识
+     * @param eventName 事件名
      */
-    public void post(@NonNull Object tag) {
-        post(tag, tag);
+    public void post(@NonNull Object eventName) {
+        post(eventName, eventName);
     }
 
     /**
-     * 发送指定tag的事件
+     * 发送指定的事件（携带数据）
      *
-     * @param tag 注册标识
-     * @param o   发生内容
+     * @param eventName 注册标识
+     * @param content   发送的内容
      */
     @SuppressWarnings("unchecked")
-    public void post(@NonNull Object tag, @NonNull Object o) {
-        List<Subject> subjects = maps.get(tag);
+    public void post(@NonNull Object eventName, @NonNull Object content) {
+        List<Subject> subjects = maps.get(eventName);
         if (subjects != null && !subjects.isEmpty()) {
             for (Subject s : subjects) {
-                s.onNext(o);
+                s.onNext(content);
             }
         }
     }

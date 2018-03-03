@@ -21,6 +21,12 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support:appcompat-v7:26.1.0'
-//    implementation project(':rxutil')
-    implementation 'com.github.xuexiangjys:RxUtil:0.0.1'
+    //butterknife的sdk
+    compile 'com.jakewharton:butterknife:8.4.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
+    implementation project(':rxutil')
+
+    implementation 'io.reactivex:rxjava:1.2.9'
+    implementation 'io.reactivex:rxandroid:1.2.1'
+//    implementation 'com.github.xuexiangjys:RxUtil:0.0.1'
 }
