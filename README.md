@@ -96,8 +96,8 @@ RxBusUtils.get().unregister(EventKey.EVENT_CLEAR, mSubscribeInfo);
 ```
 
 
-[rxSvg]: https://img.shields.io/badge/XLog-v1.0.1-brightgreen.svg
-[rx]: https://github.com/xuexiangjys/XLog
+[rxSvg]: https://img.shields.io/badge/RxUtil-v1.0-brightgreen.svg
+[rx]: https://github.com/xuexiangjys/RxUtil
 [apiSvg]: https://img.shields.io/badge/API-14+-brightgreen.svg
 [api]: https://android-arsenal.com/api?level=14
 
