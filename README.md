@@ -14,6 +14,8 @@
 
 ## 1、演示
 
+### 1.1、RxBus
+![](https://github.com/xuexiangjys/RxUtil/blob/master/img/rxbus.gif)
 
 
 ## 2、如何使用
@@ -58,10 +60,11 @@ RxBusUtils.get().onMainThread(EventKey.EVENT_HAVE_DATA, new Action1<Event>() {
 2.使用RxBusUtils.get().on方法注册事件，订阅所在线程为事件发生线程，也可指定订阅发生的线程。
 
 ```
-RxBusUtils.get().onMainThread(EventKey.EVENT_HAVE_DATA, new Action1<Event>() {
+RxBusUtils.get().on(EventKey.EVENT_BACK_NORMAL, new Action1<String>() {
             @Override
-            public void call(Event event) {
-                showContent(EventKey.EVENT_HAVE_DATA, event.toString());
+            public void call(String eventName) {
+                final String msg = "事件Key:" + EventKey.EVENT_BACK_NORMAL + "\n   EventName:" + eventName + ", 当前线程状态： " + Event.getLooperStatus();
+                showContent(msg);
             }
         });
 ```
