@@ -23,6 +23,7 @@ import com.xuexiang.rxutil.SimpleThrowableAction;
 import java.util.concurrent.ConcurrentHashMap;
 
 import rx.Observable;
+import rx.Scheduler;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -112,6 +113,34 @@ public class RxBusUtils {
         /* 订阅管理 */
         SubscribeInfo<T> info = new SubscribeInfo<>(Observable);
         info.setSubscription(add(eventName, Observable.subscribe(action1, errorAction)));
+        return info;
+    }
+
+
+    /**
+     * RxBus注入监听（可指定订阅的线程）
+     *
+     * @param eventName 事件名
+     * @param scheduler 指定订阅的线程
+     * @param action1   订阅动作
+     */
+    public <T> SubscribeInfo<T> on(Object eventName, Scheduler scheduler, Action1<T> action1) {
+        return on(eventName, scheduler, action1, new SimpleThrowableAction(TAG));
+    }
+
+    /**
+     * RxBus注入监听（可指定订阅的线程）
+     *
+     * @param eventName   事件名
+     * @param scheduler   指定订阅的线程
+     * @param action1     订阅动作
+     * @param errorAction 错误订阅
+     */
+    public <T> SubscribeInfo<T> on(Object eventName, Scheduler scheduler, Action1<T> action1, Action1<Throwable> errorAction) {
+        Observable<T> Observable = register(eventName);//注册后，返回订阅者
+        /* 订阅管理 */
+        SubscribeInfo<T> info = new SubscribeInfo<>(Observable);
+        info.setSubscription(add(eventName, Observable.observeOn(scheduler).subscribe(action1, errorAction)));
         return info;
     }
 
