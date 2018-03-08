@@ -18,7 +18,7 @@ package com.xuexiang.rxutil.rxjava;
 
 import android.support.annotation.NonNull;
 
-import com.xuexiang.rxutil.SimpleThrowableAction;
+import com.xuexiang.rxutil.subsciber.SimpleThrowableAction;
 import com.xuexiang.rxutil.rxjava.task.CommonRxTask;
 import com.xuexiang.rxutil.rxjava.task.RxIOTask;
 import com.xuexiang.rxutil.rxjava.task.RxUITask;
@@ -50,7 +50,7 @@ public final class RxJavaUtils {
      * @param <T>
      * @return
      */
-    public static <T> Subscription doInUIThread(RxUITask<T> uiTask) {
+    public static <T> Subscription doInUIThread(@NonNull RxUITask<T> uiTask) {
         return doInUIThread(uiTask, new SimpleThrowableAction(TAG));
     }
 
@@ -62,7 +62,7 @@ public final class RxJavaUtils {
      * @param <T>
      * @return
      */
-    public static <T> Subscription doInUIThread(RxUITask<T> uiTask, Action1<Throwable> errorAction) {
+    public static <T> Subscription doInUIThread(@NonNull RxUITask<T> uiTask, @NonNull Action1<Throwable> errorAction) {
         return Observable.just(uiTask)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Action1<RxUITask<T>>() {
@@ -80,7 +80,7 @@ public final class RxJavaUtils {
      * @param <T>
      * @return
      */
-    public static <T> Subscription doInIOThread(RxIOTask<T> ioTask) {
+    public static <T> Subscription doInIOThread(@NonNull RxIOTask<T> ioTask) {
         return doInIOThread(ioTask, new SimpleThrowableAction(TAG));
     }
 
@@ -92,7 +92,7 @@ public final class RxJavaUtils {
      * @param <T>
      * @return
      */
-    public static <T> Subscription doInIOThread(RxIOTask<T> ioTask, Action1<Throwable> errorAction) {
+    public static <T> Subscription doInIOThread(@NonNull RxIOTask<T> ioTask, @NonNull Action1<Throwable> errorAction) {
         return Observable.just(ioTask)
                 .observeOn(Schedulers.io())
                 .subscribe(new Action1<RxIOTask<T>>() {
@@ -110,7 +110,7 @@ public final class RxJavaUtils {
      * @param <T>
      * @return
      */
-    public static <T, R> Subscription executeRxTask(CommonRxTask<T, R> rxTask) {
+    public static <T, R> Subscription executeRxTask(@NonNull CommonRxTask<T, R> rxTask) {
         return executeRxTask(rxTask, new SimpleThrowableAction(TAG));
     }
 
@@ -122,7 +122,7 @@ public final class RxJavaUtils {
      * @param <T>
      * @return
      */
-    public static <T, R> Subscription executeRxTask(CommonRxTask<T, R> rxTask, Action1<Throwable> errorAction) {
+    public static <T, R> Subscription executeRxTask(@NonNull CommonRxTask<T, R> rxTask, @NonNull Action1<Throwable> errorAction) {
         RxTaskOnSubscribe<CommonRxTask<T, R>> onSubscribe = getCommonRxTaskOnSubscribe(rxTask);
         return Observable.create(onSubscribe)
                 .subscribeOn(Schedulers.io())
@@ -136,7 +136,7 @@ public final class RxJavaUtils {
     }
 
     @NonNull
-    private static <T, R> RxTaskOnSubscribe<CommonRxTask<T, R>> getCommonRxTaskOnSubscribe(final CommonRxTask<T, R> rxTask) {
+    private static <T, R> RxTaskOnSubscribe<CommonRxTask<T, R>> getCommonRxTaskOnSubscribe(@NonNull final CommonRxTask<T, R> rxTask) {
         return new RxTaskOnSubscribe<CommonRxTask<T, R>>(rxTask) {
             @Override
             public void call(Subscriber<? super CommonRxTask<T, R>> subscriber) {
@@ -155,7 +155,7 @@ public final class RxJavaUtils {
      * @param interval 轮询间期
      * @param action1  监听事件
      */
-    public static Subscription polling(long interval, Action1 action1) {
+    public static Subscription polling(long interval, @NonNull Action1 action1) {
         return polling(0, interval, action1);
     }
 
@@ -166,7 +166,7 @@ public final class RxJavaUtils {
      * @param interval     轮询间期
      * @param action1      监听事件
      */
-    public static Subscription polling(long initialDelay, long interval, Action1 action1) {
+    public static Subscription polling(long initialDelay, long interval, @NonNull Action1 action1) {
         return polling(initialDelay, interval, TimeUnit.SECONDS, action1, new SimpleThrowableAction(TAG));
     }
 
@@ -179,7 +179,7 @@ public final class RxJavaUtils {
      * @param action1      监听事件
      * @param errorAction  出错的事件
      */
-    public static Subscription polling(long initialDelay, long interval, TimeUnit unit, Action1 action1, Action1<Throwable> errorAction) {
+    public static Subscription polling(long initialDelay, long interval, TimeUnit unit, @NonNull Action1 action1, @NonNull Action1<Throwable> errorAction) {
         return Observable.interval(initialDelay, interval, unit)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(action1, errorAction);
@@ -192,7 +192,7 @@ public final class RxJavaUtils {
      * @param delayTime 延迟时间
      * @param action1   监听事件
      */
-    public static Subscription delay(long delayTime, Action1 action1) {
+    public static Subscription delay(long delayTime, @NonNull Action1 action1) {
         return delay(delayTime, TimeUnit.SECONDS, action1, new SimpleThrowableAction(TAG));
     }
 
@@ -204,7 +204,7 @@ public final class RxJavaUtils {
      * @param action1     监听事件
      * @param errorAction 出错的事件
      */
-    public static Subscription delay(long delayTime, TimeUnit unit, Action1 action1, Action1<Throwable> errorAction) {
+    public static Subscription delay(long delayTime, TimeUnit unit, @NonNull Action1 action1, @NonNull Action1<Throwable> errorAction) {
         return Observable.timer(delayTime, unit)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(action1, errorAction);

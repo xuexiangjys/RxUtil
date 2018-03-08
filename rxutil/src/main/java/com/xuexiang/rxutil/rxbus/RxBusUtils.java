@@ -16,9 +16,8 @@
 package com.xuexiang.rxutil.rxbus;
 
 import android.support.annotation.NonNull;
-import android.util.Log;
 
-import com.xuexiang.rxutil.SimpleThrowableAction;
+import com.xuexiang.rxutil.subsciber.SimpleThrowableAction;
 
 import java.util.concurrent.ConcurrentHashMap;
 

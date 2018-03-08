@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
-package com.xuexiang.rxutil;
+package com.xuexiang.rxutil.subsciber;
 
 import android.util.Log;
+
+import com.xuexiang.rxutil.logs.RxLog;
 
 import rx.functions.Action1;
 
@@ -35,6 +37,6 @@ public final class SimpleThrowableAction implements Action1<Throwable> {
 
     @Override
     public void call(Throwable throwable) {
-        Log.e(mTag, "订阅发生错误：" + Log.getStackTraceString(throwable));
+        RxLog.e(mTag, "订阅发生错误：" + Log.getStackTraceString(throwable));
     }
 }

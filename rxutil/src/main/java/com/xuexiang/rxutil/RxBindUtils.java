@@ -22,6 +22,7 @@ import android.widget.AdapterView;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxbinding.widget.AdapterViewItemClickEvent;
 import com.jakewharton.rxbinding.widget.RxAdapterView;
+import com.xuexiang.rxutil.subsciber.SimpleThrowableAction;
 
 import java.util.concurrent.TimeUnit;
 

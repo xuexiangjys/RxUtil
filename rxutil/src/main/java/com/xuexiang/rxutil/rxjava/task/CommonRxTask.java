@@ -21,10 +21,11 @@ import com.xuexiang.rxutil.rxjava.impl.IRxUITask;
 
 /**
  * 通用的Rx执行任务，在io线程中进行数据处理，在ui线程中刷新ui
+ *
  * @author xuexiang
  * @date 2018/3/8 下午2:31
  */
-public abstract class CommonRxTask<T, R> implements IRxIOTask<T, R>, IRxUITask<R>{
+public abstract class CommonRxTask<T, R> implements IRxIOTask<T, R>, IRxUITask<R> {
 
     /**
      * IO执行任务的入参

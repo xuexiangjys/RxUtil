@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.xuexiang.rxutil;
+package com.xuexiang.rxutil.rxjava;
 
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;

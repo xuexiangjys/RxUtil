@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.xuexiang.rxutil;
+package com.xuexiang.rxutil.rxjava;
 
 import android.support.annotation.NonNull;
 
