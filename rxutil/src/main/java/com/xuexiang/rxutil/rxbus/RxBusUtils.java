@@ -72,7 +72,7 @@ public class RxBusUtils {
      * @param eventName 事件名
      * @param action1   订阅动作
      */
-    public <T> SubscribeInfo<T> onMainThread(Object eventName, Action1<T> action1) {
+    public <T> SubscribeInfo<T> onMainThread(@NonNull Object eventName, Action1<T> action1) {
         return onMainThread(eventName, action1, new SimpleThrowableAction(TAG));
     }
 
@@ -83,7 +83,7 @@ public class RxBusUtils {
      * @param action1     订阅动作
      * @param errorAction 错误订阅
      */
-    public <T> SubscribeInfo<T> onMainThread(Object eventName, Action1<T> action1, Action1<Throwable> errorAction) {
+    public <T> SubscribeInfo<T> onMainThread(@NonNull Object eventName, Action1<T> action1, Action1<Throwable> errorAction) {
         Observable<T> Observable = register(eventName); //注册后，返回订阅者
         /* 订阅管理 */
         SubscribeInfo<T> info = new SubscribeInfo<>(Observable);
@@ -97,7 +97,7 @@ public class RxBusUtils {
      * @param eventName 事件名
      * @param action1   订阅动作
      */
-    public <T> SubscribeInfo<T> on(Object eventName, Action1<T> action1) {
+    public <T> SubscribeInfo<T> on(@NonNull Object eventName, Action1<T> action1) {
         return on(eventName, action1, new SimpleThrowableAction(TAG));
     }
 
@@ -108,7 +108,7 @@ public class RxBusUtils {
      * @param action1     订阅动作
      * @param errorAction 错误订阅
      */
-    public <T> SubscribeInfo<T> on(Object eventName, Action1<T> action1, Action1<Throwable> errorAction) {
+    public <T> SubscribeInfo<T> on(@NonNull Object eventName, Action1<T> action1, Action1<Throwable> errorAction) {
         Observable<T> Observable = register(eventName);//注册后，返回订阅者
         /* 订阅管理 */
         SubscribeInfo<T> info = new SubscribeInfo<>(Observable);
@@ -124,7 +124,7 @@ public class RxBusUtils {
      * @param scheduler 指定订阅的线程
      * @param action1   订阅动作
      */
-    public <T> SubscribeInfo<T> on(Object eventName, Scheduler scheduler, Action1<T> action1) {
+    public <T> SubscribeInfo<T> on(@NonNull Object eventName, Scheduler scheduler, Action1<T> action1) {
         return on(eventName, scheduler, action1, new SimpleThrowableAction(TAG));
     }
 
@@ -136,7 +136,7 @@ public class RxBusUtils {
      * @param action1     订阅动作
      * @param errorAction 错误订阅
      */
-    public <T> SubscribeInfo<T> on(Object eventName, Scheduler scheduler, Action1<T> action1, Action1<Throwable> errorAction) {
+    public <T> SubscribeInfo<T> on(@NonNull Object eventName, Scheduler scheduler, Action1<T> action1, Action1<Throwable> errorAction) {
         Observable<T> Observable = register(eventName);//注册后，返回订阅者
         /* 订阅管理 */
         SubscribeInfo<T> info = new SubscribeInfo<>(Observable);
@@ -150,7 +150,7 @@ public class RxBusUtils {
      * @param eventName 事件名
      * @param m         订阅信息
      */
-    public Subscription add(Object eventName, Subscription m) {
+    public Subscription add(@NonNull Object eventName, Subscription m) {
         /* 订阅管理 */
         CompositeSubscription subscription = maps.get(eventName);
         if (subscription == null) {
@@ -213,7 +213,7 @@ public class RxBusUtils {
      * @param <T>
      * @return 订阅者
      */
-    public <T> Observable<T> register(Object eventName) {
+    public <T> Observable<T> register(@NonNull Object eventName) {
         return RxBus.get().register(eventName);
     }
 
@@ -222,7 +222,7 @@ public class RxBusUtils {
      *
      * @param eventName 事件名
      */
-    public void post(Object eventName) {
+    public void post(@NonNull Object eventName) {
         RxBus.get().post(eventName);
     }
 
@@ -232,7 +232,7 @@ public class RxBusUtils {
      * @param eventName 注册标识
      * @param content   发送的内容
      */
-    public void post(Object eventName, Object content) {
+    public void post(@NonNull Object eventName, Object content) {
         RxBus.get().post(eventName, content);
     }
 

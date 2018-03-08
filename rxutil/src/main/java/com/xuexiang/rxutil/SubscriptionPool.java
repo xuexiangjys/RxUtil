@@ -66,7 +66,7 @@ public class SubscriptionPool {
      * @param tagName 标志
      * @param m 订阅信息
      */
-    public Subscription add(Object tagName, Subscription m) {
+    public Subscription add(@NonNull Object tagName, Subscription m) {
 		/* 订阅管理 */
         CompositeSubscription subscription = maps.get(tagName);
         if (subscription == null) {
