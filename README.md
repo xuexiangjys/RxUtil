@@ -12,7 +12,7 @@
 - RxBinding 使用工具类
 - RxJava常用方法工具类
 
-## 1、演示
+## 1、演示（请star支持）
 
 ### 1.1、RxBus
 ![](https://github.com/xuexiangjys/RxUtil/blob/master/img/rxbus.gif)
