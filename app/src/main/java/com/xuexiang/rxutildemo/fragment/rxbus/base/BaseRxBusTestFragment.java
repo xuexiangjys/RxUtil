@@ -24,7 +24,7 @@ import com.xuexiang.rxutil.rxbus.RxBusUtils;
 import com.xuexiang.rxutil.rxbus.SubscribeInfo;
 import com.xuexiang.rxutildemo.R;
 import com.xuexiang.rxutildemo.entity.EventKey;
-import com.xuexiang.rxutildemo.fragment.BaseFragment;
+import com.xuexiang.rxutildemo.base.BaseFragment;
 
 import butterknife.BindView;
 import butterknife.OnClick;

@@ -22,7 +22,7 @@ import com.xuexiang.rxutil.rxbus.RxBusUtils;
 import com.xuexiang.rxutildemo.R;
 import com.xuexiang.rxutildemo.entity.Event;
 import com.xuexiang.rxutildemo.entity.EventKey;
-import com.xuexiang.rxutildemo.fragment.BaseFragment;
+import com.xuexiang.rxutildemo.base.BaseFragment;
 import com.xuexiang.rxutildemo.util.ThreadPoolManager;
 
 import butterknife.OnClick;

@@ -14,57 +14,49 @@
  * limitations under the License.
  */
 
-package com.xuexiang.rxutildemo.fragment;
+package com.xuexiang.rxutildemo.base;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.ColorInt;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.view.ViewGroup;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 /**
- * 基础Fragment
- *
  * @author xuexiang
- * @date 2018/1/11 上午10:13
+ * @date 2018/1/11 上午10:37
  */
-public abstract class BaseFragment extends Fragment {
-    private View mRootView;
+public abstract class BaseActivity extends AppCompatActivity {
     private Unbinder mUnbinder;
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mRootView = inflater.inflate(getLayoutId(), container, false);
-        mUnbinder = ButterKnife.bind(this, mRootView);
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(getLayoutId());
+        mUnbinder = ButterKnife.bind(this);
+        initArgs();
         initViews();
         initListener();
-        return mRootView;
-    }
-
-    @Override
-    public void onDestroyView() {
-        mUnbinder.unbind();
-        super.onDestroyView();
-    }
-
-    protected <T extends View> T findView(int id) {
-        return (T) mRootView.findViewById(id);
     }
 
     /**
-     * 设置背景颜色
-     * @param color
+     * 初始化参数
      */
-    protected void setBackgroundColor(int color) {
-        mRootView.setBackgroundColor(getResources().getColor(color));
+    protected void initArgs() {
+
     }
+
+    @Override
+    protected void onDestroy() {
+        mUnbinder.unbind();
+        super.onDestroy();
+    }
+
     /**
      * 布局的资源id
      *
@@ -83,10 +75,12 @@ public abstract class BaseFragment extends Fragment {
      */
     protected abstract void initListener();
 
-    protected void runOnUiThread(Runnable action) {
-        if (getActivity() != null) {
-            getActivity().runOnUiThread(action);
-        }
+    protected <T extends View> T $(int id) {
+        return (T) findViewById(id);
+    }
+
+    protected void startActivity(Class<? extends Activity> clazz) {
+        startActivity(new Intent(this, clazz));
     }
 
 }
