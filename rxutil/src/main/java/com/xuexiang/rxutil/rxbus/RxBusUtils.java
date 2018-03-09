@@ -17,6 +17,7 @@ package com.xuexiang.rxutil.rxbus;
 
 import android.support.annotation.NonNull;
 
+import com.xuexiang.rxutil.subsciber.BaseSubscriber;
 import com.xuexiang.rxutil.subsciber.SimpleThrowableAction;
 
 import java.util.concurrent.ConcurrentHashMap;
@@ -78,6 +79,20 @@ public class RxBusUtils {
     /**
      * RxBus注入监听（订阅发生在主线程）
      *
+     * @param eventName  事件名
+     * @param subscriber 订阅者 [只走onNext和onError]
+     */
+    public <T> SubscribeInfo<T> onMainThread(@NonNull Object eventName, BaseSubscriber<T> subscriber) {
+        Observable<T> Observable = register(eventName); //注册后，返回订阅者
+        /* 订阅管理 */
+        SubscribeInfo<T> info = new SubscribeInfo<>(Observable);
+        info.setSubscription(add(eventName, Observable.observeOn(AndroidSchedulers.mainThread()).subscribe(subscriber)));
+        return info;
+    }
+
+    /**
+     * RxBus注入监听（订阅发生在主线程）
+     *
      * @param eventName   事件名
      * @param action1     订阅动作
      * @param errorAction 错误订阅
@@ -98,6 +113,20 @@ public class RxBusUtils {
      */
     public <T> SubscribeInfo<T> on(@NonNull Object eventName, Action1<T> action1) {
         return on(eventName, action1, new SimpleThrowableAction(TAG));
+    }
+
+    /**
+     * RxBus注入监听（订阅线程不变）
+     *
+     * @param eventName  事件名
+     * @param subscriber 订阅者 [只走onNext和onError]
+     */
+    public <T> SubscribeInfo<T> on(@NonNull Object eventName, BaseSubscriber<T> subscriber) {
+        Observable<T> Observable = register(eventName);//注册后，返回订阅者
+        /* 订阅管理 */
+        SubscribeInfo<T> info = new SubscribeInfo<>(Observable);
+        info.setSubscription(add(eventName, Observable.subscribe(subscriber)));
+        return info;
     }
 
     /**
@@ -125,6 +154,22 @@ public class RxBusUtils {
      */
     public <T> SubscribeInfo<T> on(@NonNull Object eventName, Scheduler scheduler, Action1<T> action1) {
         return on(eventName, scheduler, action1, new SimpleThrowableAction(TAG));
+    }
+
+
+    /**
+     * RxBus注入监听（订阅线程不变）
+     *
+     * @param eventName  事件名
+     * @param scheduler  响应线程
+     * @param subscriber 订阅者 [只走onNext和onError]
+     */
+    public <T> SubscribeInfo<T> on(@NonNull Object eventName, Scheduler scheduler, BaseSubscriber<T> subscriber) {
+        Observable<T> Observable = register(eventName);//注册后，返回订阅者
+        /* 订阅管理 */
+        SubscribeInfo<T> info = new SubscribeInfo<>(Observable);
+        info.setSubscription(add(eventName, Observable.observeOn(scheduler).subscribe(subscriber)));
+        return info;
     }
 
     /**

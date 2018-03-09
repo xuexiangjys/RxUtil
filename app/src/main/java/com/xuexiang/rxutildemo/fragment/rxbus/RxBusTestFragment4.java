@@ -18,6 +18,7 @@ package com.xuexiang.rxutildemo.fragment.rxbus;
 
 import com.xuexiang.rxutil.rxbus.RxBusUtils;
 import com.xuexiang.rxutil.rxbus.SubscribeInfo;
+import com.xuexiang.rxutil.subsciber.SimpleSubscriber;
 import com.xuexiang.rxutildemo.entity.Event;
 import com.xuexiang.rxutildemo.entity.EventKey;
 import com.xuexiang.rxutildemo.fragment.rxbus.base.BaseRxBusTestFragment;
@@ -47,6 +48,15 @@ public class RxBusTestFragment4 extends BaseRxBusTestFragment {
                 showContent(msg);
             }
         });
+
+        RxBusUtils.get().on(EventKey.EVENT_BACK_NORMAL, new SimpleSubscriber<String>(){
+            @Override
+            public void onNext(String eventName) {
+                final String msg = "事件Key:" + EventKey.EVENT_BACK_NORMAL + "\n   EventName:" + eventName + ", 当前线程状态： " + Event.getLooperStatus();
+                showContent(msg);
+            }
+        });
+
         mOneByMore = RxBusUtils.get().onMainThread(EventKey.EVENT_ONE_BY_MORE, new Action1<String>() {
             @Override
             public void call(String eventName) {

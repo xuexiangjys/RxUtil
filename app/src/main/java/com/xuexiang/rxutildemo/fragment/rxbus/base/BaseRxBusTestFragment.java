@@ -40,7 +40,7 @@ public abstract class BaseRxBusTestFragment extends BaseFragment {
     TextView mTvTitle;
 
     @BindView(R.id.tv_content)
-    TextView mTvContent;
+    protected TextView mTvContent;
 
     protected SubscribeInfo mSubscribeInfo;
 

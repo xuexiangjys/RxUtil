@@ -20,6 +20,7 @@ import com.xuexiang.rxutil.exception.RxException;
 import com.xuexiang.rxutil.logs.RxLog;
 
 /**
+ * 简单的订阅者
  * @author xuexiang
  * @date 2018/3/9 下午12:09
  */

@@ -14,21 +14,17 @@
  * limitations under the License.
  */
 
-package com.xuexiang.rxutildemo.activity;
+package com.xuexiang.rxutil.subsciber.impl;
 
-import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+/**
+ * 进度框取消监听
+ * @author xuexiang
+ * @date 2018/3/10 上午12:43
+ */
+public interface OnProgressCancelListener {
 
-import com.xuexiang.rxutil.logs.RxLog;
-import com.xuexiang.rxutildemo.R;
-
-public class RxBusActivity extends AppCompatActivity {
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_rxbus);
-
-        RxLog.debug(true);
-    }
+    /**
+     * 取消进度加载
+     */
+    void onCancelProgress();
 }
