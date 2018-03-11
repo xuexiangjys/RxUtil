@@ -40,8 +40,12 @@ public class ProgressDialogLoader implements IProgressLoader {
     private OnProgressCancelListener mOnProgressCancelListener;
 
     public ProgressDialogLoader(Context context) {
+        this(context, "请稍候...");
+    }
+
+    public ProgressDialogLoader(Context context, String msg) {
         mDialog = new ProgressDialog(context);
-        updateMessage("请稍候...");
+        updateMessage(msg);
     }
 
     @Override

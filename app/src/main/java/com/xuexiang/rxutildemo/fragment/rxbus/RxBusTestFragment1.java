@@ -59,4 +59,6 @@ public class RxBusTestFragment1 extends BaseRxBusTestFragment {
         RxBusUtils.get().unregisterAll(EventKey.EVENT_ONE_BY_ONE);
         RxBusUtils.get().unregister(EventKey.EVENT_CLEAR, mSubscribeInfo);
     }
+
+
 }

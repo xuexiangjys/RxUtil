@@ -16,13 +16,9 @@
 
 package com.xuexiang.rxutil.subsciber;
 
-import android.content.Context;
-
 import com.xuexiang.rxutil.exception.RxException;
 import com.xuexiang.rxutil.exception.RxExceptionHandler;
 import com.xuexiang.rxutil.logs.RxLog;
-
-import java.lang.ref.WeakReference;
 
 import rx.Subscriber;
 
@@ -33,20 +29,8 @@ import rx.Subscriber;
  */
 public abstract class BaseSubscriber<T> extends Subscriber<T> {
 
-    private WeakReference<Context> mContext;
-
     public BaseSubscriber() {
 
-    }
-
-    /**
-     * 构造器
-     * @param context
-     */
-    public BaseSubscriber(Context context) {
-        if (context != null) {
-            mContext = new WeakReference<>(context);
-        }
     }
 
     @Override
@@ -82,11 +66,4 @@ public abstract class BaseSubscriber<T> extends Subscriber<T> {
      */
     public abstract void onError(RxException e);
 
-    /**
-     * 获取上下文
-     * @return
-     */
-    public WeakReference<Context> getContext() {
-        return mContext;
-    }
 }

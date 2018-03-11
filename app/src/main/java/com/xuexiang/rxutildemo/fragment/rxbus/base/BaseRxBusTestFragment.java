@@ -114,4 +114,9 @@ public abstract class BaseRxBusTestFragment extends BaseFragment {
 
     protected abstract void onCancelEvent();
 
+    @Override
+    public void onDestroy() {
+        onCancelEvent();
+        super.onDestroy();
+    }
 }

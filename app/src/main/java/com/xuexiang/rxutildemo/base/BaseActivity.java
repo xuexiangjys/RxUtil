@@ -24,6 +24,9 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
+import com.squareup.leakcanary.RefWatcher;
+import com.xuexiang.rxutildemo.App;
+
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
@@ -55,6 +58,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onDestroy() {
         mUnbinder.unbind();
         super.onDestroy();
+        RefWatcher refWatcher = App.getRefWatcher();
+        refWatcher.watch(this);
     }
 
     /**

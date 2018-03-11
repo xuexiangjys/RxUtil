@@ -25,6 +25,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.squareup.leakcanary.RefWatcher;
+import com.xuexiang.rxutildemo.App;
+
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
@@ -97,4 +100,11 @@ public abstract class BaseFragment extends Fragment {
         }
     }
 
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        RefWatcher refWatcher = App.getRefWatcher();
+        refWatcher.watch(this);
+    }
 }

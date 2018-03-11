@@ -19,15 +19,24 @@ package com.xuexiang.rxutildemo.activity;
 import android.os.Looper;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
-import com.xuexiang.rxutil.rxjava.task.CommonRxTask;
 import com.xuexiang.rxutil.rxjava.RxJavaUtils;
+import com.xuexiang.rxutil.rxjava.task.CommonRxTask;
 import com.xuexiang.rxutil.rxjava.task.RxIOTask;
 import com.xuexiang.rxutil.rxjava.task.RxUITask;
+import com.xuexiang.rxutil.subsciber.ProgressDialogLoader;
+import com.xuexiang.rxutil.subsciber.ProgressLoadingSubscriber;
+import com.xuexiang.rxutil.subsciber.impl.IProgressLoader;
 import com.xuexiang.rxutildemo.R;
 import com.xuexiang.rxutildemo.base.BaseActivity;
 
+import java.util.concurrent.TimeUnit;
+
 import butterknife.OnClick;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
 
 /**
  * @author xuexiang
@@ -36,6 +45,8 @@ import butterknife.OnClick;
 public class RxJavaActivity extends BaseActivity {
     private final static String TAG = "RxJavaActivity";
 
+    private IProgressLoader mProgressLoader;
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_rxjava;
@@ -43,7 +54,7 @@ public class RxJavaActivity extends BaseActivity {
 
     @Override
     protected void initViews() {
-
+        mProgressLoader = new ProgressDialogLoader(this, "正在加载数据，请稍后...");
     }
 
     @Override
@@ -51,8 +62,7 @@ public class RxJavaActivity extends BaseActivity {
 
     }
 
-
-    @OnClick({R.id.btn_do_in_io, R.id.btn_do_in_ui, R.id.btn_do_in_io_ui})
+    @OnClick({R.id.btn_do_in_io, R.id.btn_do_in_ui, R.id.btn_do_in_io_ui, R.id.btn_loading})
     void OnClick(View v) {
         switch(v.getId()) {
             case R.id.btn_do_in_io:
@@ -85,6 +95,17 @@ public class RxJavaActivity extends BaseActivity {
                         Log.e(TAG, "[doInUIThread]  " + getLooperStatus() + ", 入参:" + integer);
                     }
                 });
+                break;
+            case R.id.btn_loading:
+                Observable.just("加载完毕！")
+                        .delay(3, TimeUnit.SECONDS)
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new ProgressLoadingSubscriber<String>(mProgressLoader) {
+                            @Override
+                            public void onNext(String s) {
+                                Toast.makeText(RxJavaActivity.this, s, Toast.LENGTH_SHORT).show();
+                            }
+                        });
                 break;
             default:
                 break;

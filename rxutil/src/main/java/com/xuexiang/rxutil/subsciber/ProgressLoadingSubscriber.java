@@ -16,8 +16,6 @@
 
 package com.xuexiang.rxutil.subsciber;
 
-import android.content.Context;
-
 import com.xuexiang.rxutil.exception.RxException;
 import com.xuexiang.rxutil.logs.RxLog;
 import com.xuexiang.rxutil.subsciber.impl.IProgressLoader;
@@ -39,22 +37,19 @@ public abstract class ProgressLoadingSubscriber<T> extends BaseSubscriber<T> imp
 
     /**
      * 默认不显示弹出框，不可以取消
-     *
-     * @param context
      */
-    public ProgressLoadingSubscriber(Context context) {
-        super(context);
+    public ProgressLoadingSubscriber() {
+        super();
         init(false);
     }
 
     /**
      * 自定义加载进度框
      *
-     * @param context
      * @param iProgressLoader 自定义加载
      */
-    public ProgressLoadingSubscriber(Context context, IProgressLoader iProgressLoader) {
-        super(context);
+    public ProgressLoadingSubscriber(IProgressLoader iProgressLoader) {
+        super();
         mIProgressLoader = iProgressLoader;
         init(false);
     }
@@ -62,13 +57,12 @@ public abstract class ProgressLoadingSubscriber<T> extends BaseSubscriber<T> imp
     /**
      * 自定义加载进度框,可以设置是否显示弹出框，是否可以取消
      *
-     * @param context
      * @param iProgressLoader
      * @param isShowProgress
      * @param isCancel
      */
-    public ProgressLoadingSubscriber(Context context, IProgressLoader iProgressLoader, boolean isShowProgress, boolean isCancel) {
-        super(context);
+    public ProgressLoadingSubscriber(IProgressLoader iProgressLoader, boolean isShowProgress, boolean isCancel) {
+        super();
         mIProgressLoader = iProgressLoader;
         mIsShowProgress = isShowProgress;
         init(isCancel);
