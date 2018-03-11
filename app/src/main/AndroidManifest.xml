@@ -20,6 +20,7 @@
 
         <activity android:name=".activity.RxBusActivity" />
         <activity android:name=".activity.RxJavaActivity"/>
+        <activity android:name=".activity.RxBindingActivity"/>
 
     </application>
 

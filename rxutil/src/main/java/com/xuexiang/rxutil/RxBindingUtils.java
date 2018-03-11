@@ -37,8 +37,8 @@ import rx.functions.Action1;
  * @author xuexiang
  * @date 2018/3/4 上午12:23
  */
-public final class RxBindUtils {
-    private final static String TAG = "RxBindUtils";
+public final class RxBindingUtils {
+    private final static String TAG = "RxBindingUtils";
 
     /**
      * 自定义控件监听
@@ -73,6 +73,19 @@ public final class RxBindUtils {
      */
     public static Subscription setViewClicks(View v, Action1<Void> action1) {
         return setViewClicks(v, 1, TimeUnit.SECONDS, action1, new SimpleThrowableAction(TAG));
+    }
+
+    /**
+     * 简单的控件点击监听
+     *
+     * @param v           监听控件
+     * @param duration    点击时间间隔
+     * @param unit        时间间隔单位
+     * @param action1     监听事件
+     * @return
+     */
+    public static Subscription setViewClicks(View v, long duration, TimeUnit unit, Action1<Void> action1) {
+        return setViewClicks(v, duration, unit, action1, new SimpleThrowableAction(TAG));
     }
 
     /**

@@ -22,6 +22,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.xuexiang.rxutil.rxjava.RxJavaUtils;
+import com.xuexiang.rxutil.rxjava.SubscriptionPool;
 import com.xuexiang.rxutil.rxjava.task.CommonRxTask;
 import com.xuexiang.rxutil.rxjava.task.RxIOTask;
 import com.xuexiang.rxutil.rxjava.task.RxUITask;
@@ -36,9 +37,10 @@ import java.util.concurrent.TimeUnit;
 import butterknife.OnClick;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
+import rx.functions.Action1;
 
 /**
+ * RxJavaUtils演示示例
  * @author xuexiang
  * @date 2018/3/8 下午3:37
  */
@@ -62,7 +64,7 @@ public class RxJavaActivity extends BaseActivity {
 
     }
 
-    @OnClick({R.id.btn_do_in_io, R.id.btn_do_in_ui, R.id.btn_do_in_io_ui, R.id.btn_loading})
+    @OnClick({R.id.btn_do_in_io, R.id.btn_do_in_ui, R.id.btn_do_in_io_ui, R.id.btn_loading, R.id.btn_polling})
     void OnClick(View v) {
         switch(v.getId()) {
             case R.id.btn_do_in_io:
@@ -107,6 +109,14 @@ public class RxJavaActivity extends BaseActivity {
                             }
                         });
                 break;
+            case R.id.btn_polling:
+                SubscriptionPool.get().add(RxJavaUtils.polling(5, new Action1() {
+                    @Override
+                    public void call(Object o) {
+                        Toast.makeText(RxJavaActivity.this, "正在监听", Toast.LENGTH_SHORT).show();
+                    }
+                }), "polling");
+                break;
             default:
                 break;
         }
@@ -119,5 +129,12 @@ public class RxJavaActivity extends BaseActivity {
      */
     public String getLooperStatus() {
         return "当前线程状态：" + (Looper.myLooper() == Looper.getMainLooper() ? "主线程" : "子线程");
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        SubscriptionPool.get().remove("polling");
+        super.onDestroy();
     }
 }

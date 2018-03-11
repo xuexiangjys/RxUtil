@@ -78,6 +78,23 @@ public class SubscriptionPool {
     }
 
     /**
+     * 根据tagName管理订阅【注册订阅信息】
+     * @param m 订阅信息
+     * @param tagName 标志
+     *
+     */
+    public Subscription add(Subscription m, @NonNull Object tagName) {
+		/* 订阅管理 */
+        CompositeSubscription subscription = maps.get(tagName);
+        if (subscription == null) {
+            subscription = new CompositeSubscription();
+            maps.put(tagName, subscription);
+        }
+        subscription.add(m);
+        return m;
+    }
+
+    /**
      * 取消订阅【取消标志内所有订阅信息】
      * @param tagName 标志
      */

@@ -23,9 +23,11 @@ import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Toast;
 
 import com.squareup.leakcanary.RefWatcher;
 import com.xuexiang.rxutildemo.App;
+import com.xuexiang.rxutildemo.activity.RxJavaActivity;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -88,4 +90,8 @@ public abstract class BaseActivity extends AppCompatActivity {
         startActivity(new Intent(this, clazz));
     }
 
+
+    protected void toast(String msg) {
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+    }
 }

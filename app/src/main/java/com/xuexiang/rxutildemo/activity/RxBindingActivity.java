@@ -16,48 +16,55 @@
 
 package com.xuexiang.rxutildemo.activity;
 
-import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
 
+import com.xuexiang.rxutil.RxBindingUtils;
 import com.xuexiang.rxutildemo.R;
 import com.xuexiang.rxutildemo.base.BaseActivity;
 
-import butterknife.OnClick;
+import java.util.concurrent.TimeUnit;
+
+import butterknife.BindView;
+import rx.functions.Action1;
 
 /**
  * @author xuexiang
- * @date 2018/3/8 下午3:24
+ * @date 2018/3/11 下午11:39
  */
-public class MainActivity extends BaseActivity {
+public class RxBindingActivity extends BaseActivity {
+
+    @BindView(R.id.btn_click)
+    Button mBtnClick;
+
+    /**
+     * 布局的资源id
+     *
+     * @return
+     */
     @Override
     protected int getLayoutId() {
-        return R.layout.activity_main;
+        return R.layout.activity_rxbinding;
     }
 
+    /**
+     * 初始化控件
+     */
     @Override
     protected void initViews() {
 
     }
 
+    /**
+     * 初始化监听
+     */
     @Override
     protected void initListener() {
-
-    }
-
-    @OnClick({R.id.btn_rxbus, R.id.btn_rxjava, R.id.btn_rxbinding})
-    void OnClick(View v) {
-        switch(v.getId()) {
-            case R.id.btn_rxbus:
-                startActivity(RxBusActivity.class);
-                break;
-            case R.id.btn_rxjava:
-                startActivity(RxJavaActivity.class);
-                break;
-            case R.id.btn_rxbinding:
-                startActivity(RxBindingActivity.class);
-                break;
-            default:
-                break;
-        }
-
+        RxBindingUtils.setViewClicks(mBtnClick, 5, TimeUnit.SECONDS, new Action1<Void>() {
+            @Override
+            public void call(Void aVoid) {
+                toast("触发点击");
+            }
+        });
     }
 }

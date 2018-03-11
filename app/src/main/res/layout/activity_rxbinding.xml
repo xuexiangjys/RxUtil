@@ -19,21 +19,10 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <Button
-        android:id="@+id/btn_rxbus"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="RxBusUtils" />
 
     <Button
-        android:id="@+id/btn_rxjava"
-        android:layout_width="match_parent"
+        android:id="@+id/btn_click"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="RxJavaUtils" />
-
-    <Button
-        android:id="@+id/btn_rxbinding"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="RxBindingUtils" />
+        android:text="多次点击处理" />
 </LinearLayout>

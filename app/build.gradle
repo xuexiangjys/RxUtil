@@ -30,7 +30,8 @@ dependencies {
     implementation 'io.reactivex:rxandroid:1.2.1'
 //    implementation 'com.github.xuexiangjys:RxUtil:1.0'
 
-
+    //rxbinding的sdk
+    implementation 'com.jakewharton.rxbinding:rxbinding:1.0.0'
     //leak
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5'
     releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'

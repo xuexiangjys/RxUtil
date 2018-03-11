@@ -28,6 +28,7 @@ import com.xuexiang.rxutildemo.util.ThreadPoolManager;
 import butterknife.OnClick;
 
 /**
+ * RxBus演示示例
  * @author xuexiang
  * @date 2018/3/3 下午5:10
  */
