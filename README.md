@@ -43,9 +43,9 @@ dependencies {
    implementation 'com.github.xuexiangjys:RxUtil:1.0'
 }
 ```
-### 2.1、RxBus使用
+### 3.1、RxBus使用
 
-#### 2.1.1、事件注册订阅
+#### 3.1.1、事件注册订阅
 
 1.使用RxBusUtils.get().onMainThread方法注册事件，并指定订阅发生在主线程。
 
@@ -69,7 +69,7 @@ RxBusUtils.get().on(EventKey.EVENT_BACK_NORMAL, new Action1<String>() {
         });
 ```
 
-#### 2.1.2、事件发送
+#### 3.1.2、事件发送
 
 1.使用RxBusUtils.get().post(Object eventName)发送不带数据的事件。
 ```
@@ -82,7 +82,7 @@ RxBusUtils.get().post(EventKey.EVENT_HAVE_DATA, new Event(EventKey.EVENT_HAVE_DA
 RxBusUtils.get().post(EventKey.EVENT_HAVE_DATA, true);
 ```
 
-#### 2.1.3、事件注销
+#### 3.1.3、事件注销
 
 1.使用RxBusUtils.get().unregisterAll(Object eventName)取消事件的所有订阅并注销事件。
 ```
@@ -94,6 +94,96 @@ SubscribeInfo是事件注册订阅后返回的订阅信息。如果在取消该�
 ```
 RxBusUtils.get().unregister(EventKey.EVENT_CLEAR, mSubscribeInfo);
 ```
+
+### 3.2、RxJavaUtils使用
+
+#### 3.2.1、线程任务
+
+1.RxIOTask：在io线程中操作的任务
+```
+RxJavaUtils.doInIOThread(new RxIOTask<String>("我是入参123") {
+                    @Override
+                    public Void doInIOThread(String s) {
+                        Log.e(TAG, "[doInIOThread]  " + getLooperStatus() + ", 入参:" + s);
+                        return null;
+                    }
+                });
+```
+
+2.RxUITask：在UI线程中操作的任务
+```
+RxJavaUtils.doInUIThread(new RxUITask<String>("我是入参456") {
+                    @Override
+                    public void doInUIThread(String s) {
+                        Log.e(TAG, "[doInUIThread]  " + getLooperStatus() + ", 入参:" + s);
+                    }
+                });
+```
+
+3.CommonRxTask：在IO线程中执行耗时操作 执行完成后在UI线程中订阅的任务。
+```
+RxJavaUtils.executeRxTask(new CommonRxTask<String, Integer>("我是入参789") {
+                    @Override
+                    public Integer doInIOThread(String s) {
+                        Log.e(TAG, "[doInIOThread]  " + getLooperStatus() + ", 入参:" + s);
+                        return 12345;
+                    }
+
+                    @Override
+                    public void doInUIThread(Integer integer) {
+                        Log.e(TAG, "[doInUIThread]  " + getLooperStatus() + ", 入参:" + integer);
+                    }
+                });
+```
+
+4.ProgressLoadingSubscriber：带进度条加载的订阅者，实现IProgressLoader接口可自定义加载方式。
+```
+Observable.just("加载完毕！")
+                        .delay(3, TimeUnit.SECONDS)
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new ProgressLoadingSubscriber<String>(mProgressLoader) {
+                            @Override
+                            public void onNext(String s) {
+                                Toast.makeText(RxJavaActivity.this, s, Toast.LENGTH_SHORT).show();
+                            }
+                        });
+```
+
+### 3.3、SubscriptionPool使用
+
+SubscriptionPool：RxJava的订阅池
+
+1.增加订阅：add(@NonNull Object tagName, Subscription m) 或者 add(Subscription m, @NonNull Object tagName)
+```
+SubscriptionPool.get().add(RxJavaUtils.polling(5, new Action1() {
+                    @Override
+                    public void call(Object o) {
+                        Toast.makeText(RxJavaActivity.this, "正在监听", Toast.LENGTH_SHORT).show();
+                    }
+                }), "polling");
+```
+
+2.取消订阅：remove(@NonNull Object tagName)、remove(@NonNull Object tagName, Subscription m)、removeAll()
+```
+SubscriptionPool.get().remove("polling");
+```
+
+### 3.4、RxBindingUtils使用
+
+1.setViewClicks:设置点击事件
+```
+ RxBindingUtils.setViewClicks(mBtnClick, 5, TimeUnit.SECONDS, new Action1<Void>() {
+            @Override
+            public void call(Void aVoid) {
+                toast("触发点击");
+            }
+        });
+```
+
+2.setItemClicks:设置条目点击事件
+
+
+
 
 
 [rxSvg]: https://img.shields.io/badge/RxUtil-v1.0-brightgreen.svg
