@@ -136,7 +136,11 @@ RxJavaUtils.executeRxTask(new CommonRxTask<String, Integer>("我是入参789") {
                 });
 ```
 
-4.ProgressLoadingSubscriber：带进度条加载的订阅者，实现IProgressLoader接口可自定义加载方式。
+#### 3.2.2、订阅者Subscriber
+
+1.SimpleSubscriber：简单的订阅者，已对错误进行捕获处理，并对生命周期进行日志记录。可设置IExceptionHandler接口自定义错误处理，设置ILogger接口自定义日志记录。
+
+2.ProgressLoadingSubscriber：带进度条加载的订阅者，实现IProgressLoader接口可自定义加载方式。
 ```
 Observable.just("加载完毕！")
                         .delay(3, TimeUnit.SECONDS)
