@@ -187,7 +187,35 @@ SubscriptionPool.get().remove("polling");
 2.setItemClicks:设置条目点击事件
 
 
+### 3.5、RxSchedulerUtils使用
 
+1. 订阅发生在主线程 （  ->  -> main)
+
+```
+.compose(RxSchedulerUtils.<T>_main())
+
+```
+
+2. 订阅发生在io线程 （  ->  -> io)
+
+```
+.compose(RxSchedulerUtils.<T>_io())
+
+```
+
+3. 处理在io线程，订阅发生在主线程（ -> io -> main)
+
+```
+.compose(RxSchedulerUtils.<T>_io_main())
+
+```
+
+4. 处理在io线程，订阅也发生在io线程（ -> io -> io)
+
+```
+.compose(RxSchedulerUtils.<T>_io_io())
+
+```
 
 
 [rxSvg]: https://img.shields.io/badge/RxUtil-v1.0-brightgreen.svg

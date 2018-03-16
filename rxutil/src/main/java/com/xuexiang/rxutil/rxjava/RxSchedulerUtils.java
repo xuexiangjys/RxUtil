@@ -63,7 +63,7 @@ public final class RxSchedulerUtils {
     }
 
     /**
-     * 订阅发生在主线程 （  ->  -> io)
+     * 订阅发生在io线程 （  ->  -> io)
      * 使用compose操作符
      * @param <T>
      * @return
