@@ -18,6 +18,7 @@ package com.xuexiang.rxutil.rxjava;
 
 import android.support.annotation.NonNull;
 
+import com.xuexiang.rxutil.subsciber.BaseSubscriber;
 import com.xuexiang.rxutil.subsciber.SimpleThrowableAction;
 import com.xuexiang.rxutil.rxjava.task.CommonRxTask;
 import com.xuexiang.rxutil.rxjava.task.RxIOTask;
@@ -30,6 +31,7 @@ import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 /**
@@ -43,6 +45,7 @@ public final class RxJavaUtils {
     private final static String TAG = "RxJavaUtils";
 
     //========================线程任务==========================//
+
     /**
      * 在ui线程中工作
      *
@@ -149,6 +152,7 @@ public final class RxJavaUtils {
     }
 
     //========================轮询操作==========================//
+
     /**
      * 轮询操作
      *
@@ -186,6 +190,7 @@ public final class RxJavaUtils {
     }
 
     //========================延迟操作==========================//
+
     /**
      * 延迟操作
      *
@@ -210,26 +215,100 @@ public final class RxJavaUtils {
                 .subscribe(action1, errorAction);
     }
 
+    //=====================集合、数组遍历处理=========================//
     /**
-     * 遍历数组
+     * 执行异步任务（IO线程处理，UI线程显示）
      *
-     * @param t       数组
-     * @param action1 动作
+     * @param t     处理入参
+     * @param func1 动作
+     * @param subscriber  订阅者
      * @return
      */
-    public static <T> Subscription foreach(T[] t, Action1<T> action1) {
-        return Observable.from(t).subscribe(action1, new SimpleThrowableAction(TAG));
+    public static <T, R> Subscription executeAsyncTask(T t, Func1<T, R> func1, BaseSubscriber<R> subscriber) {
+        return Observable.just(t)
+                .map(func1)
+                .compose(RxSchedulerUtils.<R>_io_main())
+                .subscribe(subscriber);
+    }
+
+
+    /**
+     * 执行异步任务（IO线程处理，UI线程显示）
+     *
+     * @param t     处理入参
+     * @param transformer 转化器
+     * @param subscriber  订阅者
+     * @return
+     */
+    public static <T, R> Subscription executeAsyncTask(T t, Observable.Transformer<T, R> transformer, BaseSubscriber<R> subscriber) {
+        return Observable.just(t)
+                .compose(transformer)
+                .compose(RxSchedulerUtils.<R>_io_main())
+                .subscribe(subscriber);
+    }
+
+
+    //=====================集合、数组遍历处理=========================//
+    /**
+     * 遍历数组进行处理（IO线程处理，UI线程显示）
+     *
+     * @param t     数组
+     * @param func1 动作
+     * @param subscriber  订阅者
+     * @return
+     */
+    public static <T, R> Subscription foreach(T[] t, Func1<T, R> func1, BaseSubscriber<R> subscriber) {
+        return Observable.from(t)
+                .map(func1)
+                .compose(RxSchedulerUtils.<R>_io_main())
+                .subscribe(subscriber);
+    }
+
+
+    /**
+     * 遍历数组进行处理（IO线程处理，UI线程显示）
+     *
+     * @param t           数组
+     * @param transformer 转化器
+     * @param subscriber  订阅者
+     * @return
+     */
+    public static <T, R> Subscription foreach(T[] t, Observable.Transformer<T, R> transformer, BaseSubscriber<R> subscriber) {
+        return Observable.from(t)
+                .compose(transformer)
+                .compose(RxSchedulerUtils.<R>_io_main())
+                .subscribe(subscriber);
     }
 
     /**
-     * 遍历集合
+     * 遍历集合进行处理（IO线程处理，UI线程显示）
      *
-     * @param t       数组
-     * @param action1 动作
+     * @param t     数组
+     * @param func1 动作
+     * @param subscriber  订阅者
      * @return
      */
-    public static <T> Subscription foreach(Iterable<T> t, Action1<T> action1) {
-        return Observable.from(t).subscribe(action1, new SimpleThrowableAction(TAG));
+    public static <T, R> Subscription foreach(Iterable<T> t, Func1<T, R> func1, BaseSubscriber<R> subscriber) {
+        return Observable.from(t)
+                .map(func1)
+                .compose(RxSchedulerUtils.<R>_io_main())
+                .subscribe(subscriber);
+    }
+
+
+    /**
+     * 遍历集合进行处理（IO线程处理，UI线程显示）
+     *
+     * @param t           数组
+     * @param transformer 转化器
+     * @param subscriber  订阅者
+     * @return
+     */
+    public static <T, R> Subscription foreach(Iterable<T> t, Observable.Transformer<T, R> transformer, BaseSubscriber<R> subscriber) {
+        return Observable.from(t)
+                .compose(transformer)
+                .compose(RxSchedulerUtils.<R>_io_main())
+                .subscribe(subscriber);
     }
 
 }

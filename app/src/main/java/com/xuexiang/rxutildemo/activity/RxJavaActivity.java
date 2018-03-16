@@ -21,13 +21,18 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.xuexiang.rxutil.exception.RxException;
+import com.xuexiang.rxutil.logs.RxLog;
 import com.xuexiang.rxutil.rxjava.RxJavaUtils;
+import com.xuexiang.rxutil.rxjava.RxSchedulerUtils;
 import com.xuexiang.rxutil.rxjava.SubscriptionPool;
 import com.xuexiang.rxutil.rxjava.task.CommonRxTask;
 import com.xuexiang.rxutil.rxjava.task.RxIOTask;
 import com.xuexiang.rxutil.rxjava.task.RxUITask;
+import com.xuexiang.rxutil.subsciber.BaseSubscriber;
 import com.xuexiang.rxutil.subsciber.ProgressDialogLoader;
 import com.xuexiang.rxutil.subsciber.ProgressLoadingSubscriber;
+import com.xuexiang.rxutil.subsciber.SimpleSubscriber;
 import com.xuexiang.rxutil.subsciber.impl.IProgressLoader;
 import com.xuexiang.rxutildemo.R;
 import com.xuexiang.rxutildemo.base.BaseActivity;
@@ -38,6 +43,7 @@ import butterknife.OnClick;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
+import rx.functions.Func1;
 
 /**
  * RxJavaUtils演示示例
@@ -64,7 +70,7 @@ public class RxJavaActivity extends BaseActivity {
 
     }
 
-    @OnClick({R.id.btn_do_in_io, R.id.btn_do_in_ui, R.id.btn_do_in_io_ui, R.id.btn_loading, R.id.btn_polling})
+    @OnClick({R.id.btn_do_in_io, R.id.btn_do_in_ui, R.id.btn_do_in_io_ui, R.id.btn_loading, R.id.btn_polling, R.id.btn_foreach})
     void OnClick(View v) {
         switch(v.getId()) {
             case R.id.btn_do_in_io:
@@ -97,6 +103,18 @@ public class RxJavaActivity extends BaseActivity {
                         Log.e(TAG, "[doInUIThread]  " + getLooperStatus() + ", 入参:" + integer);
                     }
                 });
+//                RxJavaUtils.executeAsyncTask("我是入参789", new Func1<String, Integer>() {
+//                    @Override
+//                    public Integer call(String s) {
+//                        Log.e(TAG, "[doInIOThread]  " + getLooperStatus() + ", 入参:" + s);
+//                        return 12345;
+//                    }
+//                }, new SimpleSubscriber<Integer>() {
+//                    @Override
+//                    public void onNext(Integer integer) {
+//                        Log.e(TAG, "[doInUIThread]  " + getLooperStatus() + ", 入参:" + integer);
+//                    }
+//                });
                 break;
             case R.id.btn_loading:
                 Observable.just("加载完毕！")
@@ -116,6 +134,20 @@ public class RxJavaActivity extends BaseActivity {
                         Toast.makeText(RxJavaActivity.this, "正在监听", Toast.LENGTH_SHORT).show();
                     }
                 }), "polling");
+                break;
+            case R.id.btn_foreach:
+                RxJavaUtils.foreach(new String[]{"123", "456", "789"}, new Func1<String, Integer>() {
+                    @Override
+                    public Integer call(String s) {
+                        RxLog.e("[doInIOThread]" + getLooperStatus() + ", 入参:" + s);
+                        return Integer.parseInt(s);
+                    }
+                }, new SimpleSubscriber<Integer>() {
+                    @Override
+                    public void onNext(Integer integer) {
+                        RxLog.e("[doInUIThread]  " + getLooperStatus() + ", 入参:" + integer);
+                    }
+                });
                 break;
             default:
                 break;

@@ -20,6 +20,7 @@ import android.app.Application;
 
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
+import com.xuexiang.rxutil.logs.RxLog;
 
 /**
  * @author xuexiang
@@ -33,6 +34,8 @@ public class App extends Application {
         super.onCreate();
 
         initCanary();
+
+        RxLog.debug(true);
     }
 
     private void initCanary() {

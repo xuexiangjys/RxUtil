@@ -48,4 +48,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="轮询" />
+
+    <Button
+        android:id="@+id/btn_foreach"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="数组集合处理" />
 </LinearLayout>
