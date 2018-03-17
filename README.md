@@ -40,7 +40,7 @@ dependencies {
    ...
    implementation 'io.reactivex:rxjava:1.2.9'
    implementation 'io.reactivex:rxandroid:1.2.1'
-   implementation 'com.github.xuexiangjys:RxUtil:1.0'
+   implementation 'com.github.xuexiangjys:RxUtil:1.1'
 }
 ```
 ### 3.1、RxBus使用
