@@ -18,9 +18,10 @@ package com.xuexiang.rxutil.rxjava;
 
 import android.support.annotation.NonNull;
 
+import com.xuexiang.rxutil.rxjava.task.RxAsyncTask;
+import com.xuexiang.rxutil.rxjava.task.RxIteratorTask;
 import com.xuexiang.rxutil.subsciber.BaseSubscriber;
 import com.xuexiang.rxutil.subsciber.SimpleThrowableAction;
-import com.xuexiang.rxutil.rxjava.task.CommonRxTask;
 import com.xuexiang.rxutil.rxjava.task.RxIOTask;
 import com.xuexiang.rxutil.rxjava.task.RxUITask;
 
@@ -105,52 +106,6 @@ public final class RxJavaUtils {
                     }
                 }, errorAction);
     }
-
-    /**
-     * 执行Rx通用任务 (IO线程中执行耗时操作 执行完成调用UI线程中的方法)
-     *
-     * @param rxTask 执行任务
-     * @param <T>
-     * @return
-     */
-    public static <T, R> Subscription executeRxTask(@NonNull CommonRxTask<T, R> rxTask) {
-        return executeRxTask(rxTask, new SimpleThrowableAction(TAG));
-    }
-
-    /**
-     * 执行Rx通用任务 (IO线程中执行耗时操作 执行完成调用UI线程中的方法)
-     *
-     * @param rxTask      执行任务
-     * @param errorAction 出错的处理
-     * @param <T>
-     * @return
-     */
-    public static <T, R> Subscription executeRxTask(@NonNull CommonRxTask<T, R> rxTask, @NonNull Action1<Throwable> errorAction) {
-        RxTaskOnSubscribe<CommonRxTask<T, R>> onSubscribe = getCommonRxTaskOnSubscribe(rxTask);
-        return Observable.create(onSubscribe)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action1<CommonRxTask<T, R>>() {
-                    @Override
-                    public void call(CommonRxTask<T, R> commonRxTask) {
-                        commonRxTask.doInUIThread(commonRxTask.getOutData());  //在UI线程工作
-                    }
-                }, errorAction);
-    }
-
-    @NonNull
-    private static <T, R> RxTaskOnSubscribe<CommonRxTask<T, R>> getCommonRxTaskOnSubscribe(@NonNull final CommonRxTask<T, R> rxTask) {
-        return new RxTaskOnSubscribe<CommonRxTask<T, R>>(rxTask) {
-            @Override
-            public void call(Subscriber<? super CommonRxTask<T, R>> subscriber) {
-                CommonRxTask<T, R> task = getTask();
-                task.setOutData(task.doInIOThread(task.getInData()));  //在io线程工作
-                subscriber.onNext(task);
-                subscriber.onCompleted();
-            }
-        };
-    }
-
     //========================轮询操作==========================//
 
     /**
@@ -215,49 +170,150 @@ public final class RxJavaUtils {
                 .subscribe(action1, errorAction);
     }
 
-    //=====================集合、数组遍历处理=========================//
+    //=====================AsyncTask=========================//
+
+    /**
+     * 执行Rx通用任务 (IO线程中执行耗时操作 执行完成调用UI线程中的方法)
+     *
+     * @param rxTask 执行任务
+     * @param <T>
+     * @return
+     */
+    public static <T, R> Subscription executeAsyncTask(@NonNull RxAsyncTask<T, R> rxTask) {
+        return executeAsyncTask(rxTask, new SimpleThrowableAction(TAG));
+    }
+
+    /**
+     * 执行Rx通用任务 (IO线程中执行耗时操作 执行完成调用UI线程中的方法)
+     *
+     * @param rxTask      执行任务
+     * @param errorAction 出错的处理
+     * @param <T>
+     * @return
+     */
+    public static <T, R> Subscription executeAsyncTask(@NonNull RxAsyncTask<T, R> rxTask, @NonNull Action1<Throwable> errorAction) {
+        RxTaskOnSubscribe<RxAsyncTask<T, R>> onSubscribe = getRxAsyncTaskOnSubscribe(rxTask);
+        return Observable.create(onSubscribe)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<RxAsyncTask<T, R>>() {
+                    @Override
+                    public void call(RxAsyncTask<T, R> rxAsyncTask) {
+                        rxAsyncTask.doInUIThread(rxAsyncTask.getOutData());  //在UI线程工作
+                    }
+                }, errorAction);
+    }
+
+    @NonNull
+    private static <T, R> RxTaskOnSubscribe<RxAsyncTask<T, R>> getRxAsyncTaskOnSubscribe(@NonNull final RxAsyncTask<T, R> rxTask) {
+        return new RxTaskOnSubscribe<RxAsyncTask<T, R>>(rxTask) {
+            @Override
+            public void call(Subscriber<? super RxAsyncTask<T, R>> subscriber) {
+                RxAsyncTask<T, R> task = getTask();
+                task.setOutData(task.doInIOThread(task.getInData()));  //在io线程工作
+                subscriber.onNext(task);
+                subscriber.onCompleted();
+            }
+        };
+    }
+
     /**
      * 执行异步任务（IO线程处理，UI线程显示）
      *
      * @param t     处理入参
      * @param func1 动作
-     * @param subscriber  订阅者
      * @return
      */
-    public static <T, R> Subscription executeAsyncTask(T t, Func1<T, R> func1, BaseSubscriber<R> subscriber) {
+    public static <T, R> Observable<R> executeAsyncTask(@NonNull T t, @NonNull Func1<T, R> func1) {
         return Observable.just(t)
                 .map(func1)
-                .compose(RxSchedulerUtils.<R>_io_main())
-                .subscribe(subscriber);
+                .compose(RxSchedulerUtils.<R>_io_main());
+    }
+
+    /**
+     * 执行异步任务（IO线程处理，UI线程显示）
+     *
+     * @param t          处理入参
+     * @param func1      动作
+     * @param subscriber 订阅者
+     * @return
+     */
+    public static <T, R> Subscription executeAsyncTask(@NonNull T t, @NonNull Func1<T, R> func1, @NonNull BaseSubscriber<R> subscriber) {
+        return executeAsyncTask(t, func1).subscribe(subscriber);
     }
 
 
     /**
      * 执行异步任务（IO线程处理，UI线程显示）
      *
-     * @param t     处理入参
+     * @param t           处理入参
+     * @param transformer 转化器
+     * @return
+     */
+    public static <T, R> Observable<R> executeAsyncTask(@NonNull T t, @NonNull Observable.Transformer<T, R> transformer) {
+        return Observable.just(t)
+                .compose(transformer)
+                .compose(RxSchedulerUtils.<R>_io_main());
+    }
+
+    /**
+     * 执行异步任务（IO线程处理，UI线程显示）
+     *
+     * @param t           处理入参
      * @param transformer 转化器
      * @param subscriber  订阅者
      * @return
      */
-    public static <T, R> Subscription executeAsyncTask(T t, Observable.Transformer<T, R> transformer, BaseSubscriber<R> subscriber) {
-        return Observable.just(t)
-                .compose(transformer)
-                .compose(RxSchedulerUtils.<R>_io_main())
-                .subscribe(subscriber);
+    public static <T, R> Subscription executeAsyncTask(@NonNull T t, @NonNull Observable.Transformer<T, R> transformer, @NonNull BaseSubscriber<R> subscriber) {
+        return executeAsyncTask(t, transformer).subscribe(subscriber);
     }
 
 
     //=====================集合、数组遍历处理=========================//
+
+    /**
+     * 遍历集合进行处理（IO线程处理，UI线程显示）
+     *
+     * @param rxIteratorTask
+     * @return
+     */
+    public static <T, R> Subscription executeRxIteratorTask(final RxIteratorTask<T, R> rxIteratorTask) {
+        return executeRxIteratorTask(rxIteratorTask, new SimpleThrowableAction(TAG));
+    }
+
+
+    /**
+     * 遍历集合进行处理（IO线程处理，UI线程显示）
+     *
+     * @param rxIteratorTask
+     * @param errorAction    出错的处理
+     * @return
+     */
+    public static <T, R> Subscription executeRxIteratorTask(final RxIteratorTask<T, R> rxIteratorTask, @NonNull Action1<Throwable> errorAction) {
+        Observable<T> observable = rxIteratorTask.isArray() ? Observable.from(rxIteratorTask.getArray()) : Observable.from(rxIteratorTask.getIterable());
+        return observable.map(new Func1<T, R>() {
+            @Override
+            public R call(T t) {
+                return rxIteratorTask.doInIOThread(t);
+            }
+        }).compose(RxSchedulerUtils.<R>_io_main())
+                .subscribe(new Action1<R>() {
+                    @Override
+                    public void call(R r) {
+                        rxIteratorTask.doInUIThread(r);
+                    }
+                }, errorAction);
+    }
+
     /**
      * 遍历数组进行处理（IO线程处理，UI线程显示）
      *
-     * @param t     数组
-     * @param func1 动作
-     * @param subscriber  订阅者
+     * @param t          数组
+     * @param func1      动作
+     * @param subscriber 订阅者
      * @return
      */
-    public static <T, R> Subscription foreach(T[] t, Func1<T, R> func1, BaseSubscriber<R> subscriber) {
+    public static <T, R> Subscription foreach(@NonNull T[] t, @NonNull Func1<T, R> func1, @NonNull BaseSubscriber<R> subscriber) {
         return Observable.from(t)
                 .map(func1)
                 .compose(RxSchedulerUtils.<R>_io_main())
@@ -273,7 +329,7 @@ public final class RxJavaUtils {
      * @param subscriber  订阅者
      * @return
      */
-    public static <T, R> Subscription foreach(T[] t, Observable.Transformer<T, R> transformer, BaseSubscriber<R> subscriber) {
+    public static <T, R> Subscription foreach(@NonNull T[] t, @NonNull Observable.Transformer<T, R> transformer, @NonNull BaseSubscriber<R> subscriber) {
         return Observable.from(t)
                 .compose(transformer)
                 .compose(RxSchedulerUtils.<R>_io_main())
@@ -283,12 +339,12 @@ public final class RxJavaUtils {
     /**
      * 遍历集合进行处理（IO线程处理，UI线程显示）
      *
-     * @param t     数组
-     * @param func1 动作
-     * @param subscriber  订阅者
+     * @param t          数组
+     * @param func1      动作
+     * @param subscriber 订阅者
      * @return
      */
-    public static <T, R> Subscription foreach(Iterable<T> t, Func1<T, R> func1, BaseSubscriber<R> subscriber) {
+    public static <T, R> Subscription foreach(@NonNull Iterable<T> t, @NonNull Func1<T, R> func1, @NonNull BaseSubscriber<R> subscriber) {
         return Observable.from(t)
                 .map(func1)
                 .compose(RxSchedulerUtils.<R>_io_main())
@@ -304,11 +360,13 @@ public final class RxJavaUtils {
      * @param subscriber  订阅者
      * @return
      */
-    public static <T, R> Subscription foreach(Iterable<T> t, Observable.Transformer<T, R> transformer, BaseSubscriber<R> subscriber) {
+    public static <T, R> Subscription foreach(@NonNull Iterable<T> t, @NonNull Observable.Transformer<T, R> transformer, @NonNull BaseSubscriber<R> subscriber) {
         return Observable.from(t)
                 .compose(transformer)
                 .compose(RxSchedulerUtils.<R>_io_main())
                 .subscribe(subscriber);
     }
+
+
 
 }

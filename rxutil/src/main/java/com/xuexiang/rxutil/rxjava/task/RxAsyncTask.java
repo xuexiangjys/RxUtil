@@ -20,12 +20,12 @@ import com.xuexiang.rxutil.rxjava.impl.IRxIOTask;
 import com.xuexiang.rxutil.rxjava.impl.IRxUITask;
 
 /**
- * 通用的Rx执行任务，在io线程中进行数据处理，在ui线程中刷新ui
+ * 通用的Rx异步执行任务，在io线程中进行数据处理，在ui线程中刷新ui
  *
  * @author xuexiang
  * @date 2018/3/8 下午2:31
  */
-public abstract class CommonRxTask<T, R> implements IRxIOTask<T, R>, IRxUITask<R> {
+public abstract class RxAsyncTask<T, R> implements IRxIOTask<T, R>, IRxUITask<R> {
 
     /**
      * IO执行任务的入参
@@ -37,7 +37,7 @@ public abstract class CommonRxTask<T, R> implements IRxIOTask<T, R>, IRxUITask<R
      */
     private R OutData;
 
-    public CommonRxTask(T inData) {
+    public RxAsyncTask(T inData) {
         InData = inData;
     }
 
@@ -45,7 +45,7 @@ public abstract class CommonRxTask<T, R> implements IRxIOTask<T, R>, IRxUITask<R
         return InData;
     }
 
-    public CommonRxTask setInData(T inData) {
+    public RxAsyncTask setInData(T inData) {
         InData = inData;
         return this;
     }
@@ -54,7 +54,7 @@ public abstract class CommonRxTask<T, R> implements IRxIOTask<T, R>, IRxUITask<R
         return OutData;
     }
 
-    public CommonRxTask setOutData(R outData) {
+    public RxAsyncTask setOutData(R outData) {
         OutData = outData;
         return this;
     }

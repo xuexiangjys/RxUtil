@@ -21,15 +21,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import com.xuexiang.rxutil.exception.RxException;
 import com.xuexiang.rxutil.logs.RxLog;
 import com.xuexiang.rxutil.rxjava.RxJavaUtils;
-import com.xuexiang.rxutil.rxjava.RxSchedulerUtils;
 import com.xuexiang.rxutil.rxjava.SubscriptionPool;
-import com.xuexiang.rxutil.rxjava.task.CommonRxTask;
+import com.xuexiang.rxutil.rxjava.task.RxAsyncTask;
 import com.xuexiang.rxutil.rxjava.task.RxIOTask;
+import com.xuexiang.rxutil.rxjava.task.RxIteratorTask;
 import com.xuexiang.rxutil.rxjava.task.RxUITask;
-import com.xuexiang.rxutil.subsciber.BaseSubscriber;
 import com.xuexiang.rxutil.subsciber.ProgressDialogLoader;
 import com.xuexiang.rxutil.subsciber.ProgressLoadingSubscriber;
 import com.xuexiang.rxutil.subsciber.SimpleSubscriber;
@@ -91,7 +89,7 @@ public class RxJavaActivity extends BaseActivity {
                 });
                 break;
             case R.id.btn_do_in_io_ui:
-                RxJavaUtils.executeRxTask(new CommonRxTask<String, Integer>("我是入参789") {
+                RxJavaUtils.executeAsyncTask(new RxAsyncTask<String, Integer>("我是入参789") {
                     @Override
                     public Integer doInIOThread(String s) {
                         Log.e(TAG, "[doInIOThread]  " + getLooperStatus() + ", 入参:" + s);
@@ -148,6 +146,18 @@ public class RxJavaActivity extends BaseActivity {
                         RxLog.e("[doInUIThread]  " + getLooperStatus() + ", 入参:" + integer);
                     }
                 });
+//                RxJavaUtils.executeRxIteratorTask(new RxIteratorTask<String, Integer>(new String[]{"123", "456", "789"}) {
+//                    @Override
+//                    public Integer doInIOThread(String s) {
+//                        RxLog.e("[doInIOThread]" + getLooperStatus() + ", 入参:" + s);
+//                        return Integer.parseInt(s);
+//                    }
+//
+//                    @Override
+//                    public void doInUIThread(Integer integer) {
+//                        RxLog.e("[doInUIThread]  " + getLooperStatus() + ", 入参:" + integer);
+//                    }
+//                });
                 break;
             default:
                 break;
