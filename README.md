@@ -51,22 +51,22 @@ dependencies {
 
 ```
 RxBusUtils.get().onMainThread(EventKey.EVENT_HAVE_DATA, new Action1<Event>() {
-            @Override
-            public void call(Event event) {
-                showContent(EventKey.EVENT_HAVE_DATA, event.toString());
-            }
-        });
+    @Override
+    public void call(Event event) {
+        showContent(EventKey.EVENT_HAVE_DATA, event.toString());
+    }
+});
 ```
 2.使用RxBusUtils.get().on方法注册事件，订阅所在线程为事件发生线程，也可指定订阅发生的线程。
 
 ```
 RxBusUtils.get().on(EventKey.EVENT_BACK_NORMAL, new Action1<String>() {
-            @Override
-            public void call(String eventName) {
-                final String msg = "事件Key:" + EventKey.EVENT_BACK_NORMAL + "\n   EventName:" + eventName + ", 当前线程状态： " + Event.getLooperStatus();
-                showContent(msg);
-            }
-        });
+    @Override
+    public void call(String eventName) {
+        final String msg = "事件Key:" + EventKey.EVENT_BACK_NORMAL + "\n   EventName:" + eventName + ", 当前线程状态： " + Event.getLooperStatus();
+        showContent(msg);
+    }
+});
 ```
 
 #### 3.1.2、事件发送
@@ -102,38 +102,55 @@ RxBusUtils.get().unregister(EventKey.EVENT_CLEAR, mSubscribeInfo);
 1.RxIOTask：在io线程中操作的任务
 ```
 RxJavaUtils.doInIOThread(new RxIOTask<String>("我是入参123") {
-                    @Override
-                    public Void doInIOThread(String s) {
-                        Log.e(TAG, "[doInIOThread]  " + getLooperStatus() + ", 入参:" + s);
-                        return null;
-                    }
-                });
+    @Override
+    public Void doInIOThread(String s) {
+        Log.e(TAG, "[doInIOThread]  " + getLooperStatus() + ", 入参:" + s);
+        return null;
+    }
+});
 ```
 
 2.RxUITask：在UI线程中操作的任务
+
 ```
 RxJavaUtils.doInUIThread(new RxUITask<String>("我是入参456") {
-                    @Override
-                    public void doInUIThread(String s) {
-                        Log.e(TAG, "[doInUIThread]  " + getLooperStatus() + ", 入参:" + s);
-                    }
-                });
+    @Override
+    public void doInUIThread(String s) {
+        Log.e(TAG, "[doInUIThread]  " + getLooperStatus() + ", 入参:" + s);
+    }
+});
 ```
 
-3.CommonRxTask：在IO线程中执行耗时操作 执行完成后在UI线程中订阅的任务。
+3.RxAsyncTask：在IO线程中执行耗时操作 执行完成后在UI线程中订阅的任务。
 ```
-RxJavaUtils.executeRxTask(new CommonRxTask<String, Integer>("我是入参789") {
-                    @Override
-                    public Integer doInIOThread(String s) {
-                        Log.e(TAG, "[doInIOThread]  " + getLooperStatus() + ", 入参:" + s);
-                        return 12345;
-                    }
+RxJavaUtils.executeAsyncTask(new RxAsyncTask<String, Integer>("我是入参789") {
+    @Override
+    public Integer doInIOThread(String s) {
+        Log.e(TAG, "[doInIOThread]  " + getLooperStatus() + ", 入参:" + s);
+        return 12345;
+    }
 
-                    @Override
-                    public void doInUIThread(Integer integer) {
-                        Log.e(TAG, "[doInUIThread]  " + getLooperStatus() + ", 入参:" + integer);
-                    }
-                });
+    @Override
+    public void doInUIThread(Integer integer) {
+        Log.e(TAG, "[doInUIThread]  " + getLooperStatus() + ", 入参:" + integer);
+    }
+});
+```
+
+4.RxIteratorTask:遍历集合或者数组的任务，在IO线程中执行耗时操作 执行完成后在UI线程中订阅的任务。
+```
+RxJavaUtils.executeRxIteratorTask(new RxIteratorTask<String, Integer>(new String[]{"123", "456", "789"}) {
+    @Override
+    public Integer doInIOThread(String s) {
+        RxLog.e("[doInIOThread]" + getLooperStatus() + ", 入参:" + s);
+        return Integer.parseInt(s);
+    }
+
+    @Override
+    public void doInUIThread(Integer integer) {
+        RxLog.e("[doInUIThread]  " + getLooperStatus() + ", 入参:" + integer);
+    }
+});
 ```
 
 #### 3.2.2、订阅者Subscriber
@@ -143,14 +160,14 @@ RxJavaUtils.executeRxTask(new CommonRxTask<String, Integer>("我是入参789") {
 2.ProgressLoadingSubscriber：带进度条加载的订阅者，实现IProgressLoader接口可自定义加载方式。
 ```
 Observable.just("加载完毕！")
-                        .delay(3, TimeUnit.SECONDS)
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new ProgressLoadingSubscriber<String>(mProgressLoader) {
-                            @Override
-                            public void onNext(String s) {
-                                Toast.makeText(RxJavaActivity.this, s, Toast.LENGTH_SHORT).show();
-                            }
-                        });
+    .delay(3, TimeUnit.SECONDS)
+    .observeOn(AndroidSchedulers.mainThread())
+    .subscribe(new ProgressLoadingSubscriber<String>(mProgressLoader) {
+        @Override
+        public void onNext(String s) {
+            Toast.makeText(RxJavaActivity.this, s, Toast.LENGTH_SHORT).show();
+        }
+    });
 ```
 
 ### 3.3、SubscriptionPool使用
@@ -160,11 +177,11 @@ SubscriptionPool：RxJava的订阅池
 1.增加订阅：add(@NonNull Object tagName, Subscription m) 或者 add(Subscription m, @NonNull Object tagName)
 ```
 SubscriptionPool.get().add(RxJavaUtils.polling(5, new Action1() {
-                    @Override
-                    public void call(Object o) {
-                        Toast.makeText(RxJavaActivity.this, "正在监听", Toast.LENGTH_SHORT).show();
-                    }
-                }), "polling");
+    @Override
+    public void call(Object o) {
+        Toast.makeText(RxJavaActivity.this, "正在监听", Toast.LENGTH_SHORT).show();
+    }
+}), "polling");
 ```
 
 2.取消订阅：remove(@NonNull Object tagName)、remove(@NonNull Object tagName, Subscription m)、removeAll()
@@ -176,12 +193,12 @@ SubscriptionPool.get().remove("polling");
 
 1.setViewClicks:设置点击事件
 ```
- RxBindingUtils.setViewClicks(mBtnClick, 5, TimeUnit.SECONDS, new Action1<Void>() {
-            @Override
-            public void call(Void aVoid) {
-                toast("触发点击");
-            }
-        });
+RxBindingUtils.setViewClicks(mBtnClick, 5, TimeUnit.SECONDS, new Action1<Void>() {
+    @Override
+    public void call(Void aVoid) {
+        toast("触发点击");
+    }
+});
 ```
 
 2.setItemClicks:设置条目点击事件
@@ -218,7 +235,7 @@ SubscriptionPool.get().remove("polling");
 ```
 
 
-[rxSvg]: https://img.shields.io/badge/RxUtil-v1.0-brightgreen.svg
+[rxSvg]: https://img.shields.io/badge/RxUtil-v1.1-brightgreen.svg
 [rx]: https://github.com/xuexiangjys/RxUtil
 [apiSvg]: https://img.shields.io/badge/API-14+-brightgreen.svg
 [api]: https://android-arsenal.com/api?level=14
