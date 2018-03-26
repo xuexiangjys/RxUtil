@@ -20,9 +20,9 @@ import java.util.Arrays;
 
 /**
  * 万能的事件对象
- * Created by XUE on 2017/6/5.
+ * @author xuexiang
+ * @date 2018/3/26 下午11:01
  */
-
 public class Event {
     /**
      * 事件key
