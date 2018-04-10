@@ -37,6 +37,6 @@ public final class SimpleThrowableAction implements Action1<Throwable> {
 
     @Override
     public void call(Throwable throwable) {
-        RxLog.e(mTag, "订阅发生错误：" + Log.getStackTraceString(throwable));
+        RxLog.eTag(mTag, "订阅发生错误！", throwable);
     }
 }
