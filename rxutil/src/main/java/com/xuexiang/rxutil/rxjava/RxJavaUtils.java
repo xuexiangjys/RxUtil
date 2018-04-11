@@ -114,7 +114,7 @@ public final class RxJavaUtils {
      * @param interval 轮询间期
      * @param action1  监听事件
      */
-    public static Subscription polling(long interval, @NonNull Action1 action1) {
+    public static Subscription polling(long interval, @NonNull Action1<Long> action1) {
         return polling(0, interval, action1);
     }
 
@@ -125,7 +125,7 @@ public final class RxJavaUtils {
      * @param interval     轮询间期
      * @param action1      监听事件
      */
-    public static Subscription polling(long initialDelay, long interval, @NonNull Action1 action1) {
+    public static Subscription polling(long initialDelay, long interval, @NonNull Action1<Long> action1) {
         return polling(initialDelay, interval, TimeUnit.SECONDS, action1, new SimpleThrowableAction(TAG));
     }
 
@@ -138,7 +138,7 @@ public final class RxJavaUtils {
      * @param action1      监听事件
      * @param errorAction  出错的事件
      */
-    public static Subscription polling(long initialDelay, long interval, TimeUnit unit, @NonNull Action1 action1, @NonNull Action1<Throwable> errorAction) {
+    public static Subscription polling(long initialDelay, long interval, TimeUnit unit, @NonNull Action1<Long> action1, @NonNull Action1<Throwable> errorAction) {
         return Observable.interval(initialDelay, interval, unit)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(action1, errorAction);
@@ -152,7 +152,7 @@ public final class RxJavaUtils {
      * @param delayTime 延迟时间
      * @param action1   监听事件
      */
-    public static Subscription delay(long delayTime, @NonNull Action1 action1) {
+    public static Subscription delay(long delayTime, @NonNull Action1<Long> action1) {
         return delay(delayTime, TimeUnit.SECONDS, action1, new SimpleThrowableAction(TAG));
     }
 
@@ -164,7 +164,7 @@ public final class RxJavaUtils {
      * @param action1     监听事件
      * @param errorAction 出错的事件
      */
-    public static Subscription delay(long delayTime, TimeUnit unit, @NonNull Action1 action1, @NonNull Action1<Throwable> errorAction) {
+    public static Subscription delay(long delayTime, TimeUnit unit, @NonNull Action1<Long> action1, @NonNull Action1<Throwable> errorAction) {
         return Observable.timer(delayTime, unit)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(action1, errorAction);
