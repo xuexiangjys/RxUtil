@@ -18,7 +18,6 @@ package com.xuexiang.rxutildemo.fragment.rxbus;
 
 import com.xuexiang.rxutil.rxbus.RxBusUtils;
 import com.xuexiang.rxutil.rxbus.SubscribeInfo;
-import com.xuexiang.rxutildemo.entity.Event;
 import com.xuexiang.rxutildemo.entity.EventKey;
 import com.xuexiang.rxutildemo.fragment.rxbus.base.BaseRxBusTestFragment;
 
