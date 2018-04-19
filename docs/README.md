@@ -37,7 +37,7 @@ dependencies {
 
 ## 联系方式
 
-[![](https://img.shields.io/badge/点击一键加入QQ群-602082750-blue.svg)](http://shang.qq.com/wpa/qunwpa?idkey=1e1f4bcfd8775a55e6cf6411f6ff0e7058ff469ef87c4d1e67890c27f0c5a390)
+[![](https://img.shields.io/badge/点击一键加入QQ群-602082750-blue.svg)](http://shang.qq.com/wpa/qunwpa?idkey=9922861ef85c19f1575aecea0e8680f60d9386080a97ed310c971ae074998887)
 
 [rxSvg]: https://img.shields.io/badge/RxUtil-v1.1-brightgreen.svg
 [rx]: https://github.com/xuexiangjys/RxUtil
