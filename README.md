@@ -20,6 +20,12 @@
 ### 1.1、RxBus
 ![](https://github.com/xuexiangjys/RxUtil/blob/master/img/rxbus.gif)
 
+### Demo下载
+
+[![downloads](https://img.shields.io/badge/downloads-1.5M-blue.svg)](https://github.com/xuexiangjys/RxUtil/blob/master/apk/rxutildemo.apk?raw=true)
+
+![](https://github.com/xuexiangjys/RxUtil/blob/master/img/download.png)
+
 
 ## 2、如何使用
 目前支持主流开发工具AndroidStudio的使用，直接配置build.gradle，增加依赖即可.
@@ -239,7 +245,7 @@ RxBindingUtils.setViewClicks(mBtnClick, 5, TimeUnit.SECONDS, new Action1<Void>()
 
 ## 联系方式
 
-[![](https://img.shields.io/badge/%E7%82%B9%E6%88%91%E4%B8%80%E9%94%AE%E5%8A%A0%E5%85%A5QQ%E7%BE%A4-602082750-blue.svg)](http://shang.qq.com/wpa/qunwpa?idkey=9922861ef85c19f1575aecea0e8680f60d9386080a97ed310c971ae074998887)
+[![](https://img.shields.io/badge/点击一键加入QQ群-602082750-blue.svg)](http://shang.qq.com/wpa/qunwpa?idkey=9922861ef85c19f1575aecea0e8680f60d9386080a97ed310c971ae074998887)
 
 ![](https://github.com/xuexiangjys/XPage/blob/master/img/qq_group.jpg)
 

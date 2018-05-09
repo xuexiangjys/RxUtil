@@ -10,11 +10,34 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+
+    signingConfigs {
+        release {
+            storeFile file(app_release.storeFile)
+            storePassword app_release.storePassword
+            keyAlias app_release.keyAlias
+            keyPassword app_release.keyPassword
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
+    }
+
+    applicationVariants.all { variant ->
+        variant.outputs.all {
+            if (variant.buildType.name.equals('release')) {
+                outputFileName = "rxutildemo.apk"
+            }
+        }
+    }
+
+    lintOptions {
+        abortOnError false
     }
 }
 
