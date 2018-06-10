@@ -144,14 +144,24 @@ public final class RxBindingUtils {
      * 简单的文字变化监听
      *
      * @param textView 监听控件
+     * @return
+     */
+    public static Observable<CharSequence> textChanges(TextView textView) {
+        return RxTextView.textChanges(textView);
+    }
+
+    /**
+     * 简单的文字变化监听
+     *
+     * @param textView 监听控件
      * @param timeout  响应的间隔
      * @param unit     时间间隔单位
      * @return
      */
     public static Observable<CharSequence> textChanges(TextView textView, long timeout, TimeUnit unit) {
         return RxTextView.textChanges(textView)
-                .compose(RxOperationUtils.<CharSequence>_debounce(timeout, unit))
                 .skip(1) //跳过第1次数据发射 = 初始输入框的空字符状态
+                .compose(RxOperationUtils.<CharSequence>_debounce(timeout, unit))
                 .observeOn(AndroidSchedulers.mainThread());
     }
 

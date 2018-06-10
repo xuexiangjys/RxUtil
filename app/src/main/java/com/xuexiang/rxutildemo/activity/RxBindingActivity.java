@@ -16,19 +16,23 @@
 
 package com.xuexiang.rxutildemo.activity;
 
+import android.text.TextUtils;
 import android.widget.Button;
 import android.widget.EditText;
 
 import com.xuexiang.rxutil.RxBindingUtils;
 import com.xuexiang.rxutil.rxjava.SubscriptionPool;
+import com.xuexiang.rxutil.subsciber.SimpleThrowableAction;
 import com.xuexiang.rxutildemo.R;
 import com.xuexiang.rxutildemo.base.BaseActivity;
 
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
-import rx.Subscription;
+import butterknife.OnClick;
+import rx.Observable;
 import rx.functions.Action1;
+import rx.functions.Func2;
 
 /**
  * @author xuexiang
@@ -40,6 +44,12 @@ public class RxBindingActivity extends BaseActivity {
     Button mBtnClick;
     @BindView(R.id.et_input)
     EditText mEtInput;
+    @BindView(R.id.et_username)
+    EditText mEtUsername;
+    @BindView(R.id.et_password)
+    EditText mEtPassword;
+    @BindView(R.id.btn_login)
+    Button mBtnLogin;
 
     /**
      * 布局的资源id
@@ -78,11 +88,30 @@ public class RxBindingActivity extends BaseActivity {
             }
         }), "textChanges");
 
+
+        SubscriptionPool.get().add(Observable.combineLatest(RxBindingUtils.textChanges(mEtUsername), RxBindingUtils.textChanges(mEtPassword), new Func2<CharSequence, CharSequence, Boolean>() {
+            @Override
+            public Boolean call(CharSequence charSequence, CharSequence charSequence2) {
+                return !TextUtils.isEmpty(mEtUsername.getText()) && !TextUtils.isEmpty(mEtPassword.getText());
+            }
+        }).subscribe(new Action1<Boolean>() {
+            @Override
+            public void call(Boolean aBoolean) {
+                mBtnLogin.setEnabled(aBoolean);
+            }
+        }, new SimpleThrowableAction("RxBindingActivity")), "combineLatest");
+
     }
 
     @Override
     protected void onDestroy() {
         SubscriptionPool.get().remove("textChanges");
+        SubscriptionPool.get().remove("combineLatest");
         super.onDestroy();
+    }
+
+    @OnClick(R.id.btn_login)
+    public void onViewClicked() {
+        toast("登录");
     }
 }
