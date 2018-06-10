@@ -19,11 +19,11 @@ package com.xuexiang.rxutil.rxjava;
 import android.support.annotation.NonNull;
 
 import com.xuexiang.rxutil.rxjava.task.RxAsyncTask;
+import com.xuexiang.rxutil.rxjava.task.RxIOTask;
 import com.xuexiang.rxutil.rxjava.task.RxIteratorTask;
+import com.xuexiang.rxutil.rxjava.task.RxUITask;
 import com.xuexiang.rxutil.subsciber.BaseSubscriber;
 import com.xuexiang.rxutil.subsciber.SimpleThrowableAction;
-import com.xuexiang.rxutil.rxjava.task.RxIOTask;
-import com.xuexiang.rxutil.rxjava.task.RxUITask;
 
 import java.util.concurrent.TimeUnit;
 
@@ -146,6 +146,49 @@ public final class RxJavaUtils {
         return Observable.interval(initialDelay, interval, unit)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(action1, errorAction);
+    }
+
+    //=================倒计时=================//
+
+    /**
+     * 倒计时操作【间隔1秒】
+     *
+     * @param totalTime  倒计时总时长
+     * @param subscriber 事件订阅
+     * @return
+     */
+    public static Subscription countDown(final long totalTime, @NonNull BaseSubscriber<Long> subscriber) {
+        return countDown(totalTime, 1, TimeUnit.SECONDS).subscribe(subscriber);
+    }
+
+    /**
+     * 倒计时操作【间隔1秒】
+     *
+     * @param totalTime 倒计时总时长
+     * @return
+     */
+    public static Observable<Long> countDown(final long totalTime) {
+        return countDown(totalTime, 1, TimeUnit.SECONDS);
+    }
+
+    /**
+     * 倒计时操作
+     *
+     * @param totalTime 倒计时总时长
+     * @param interval  倒计时间隔
+     * @param unit      时间间隔单位
+     * @return
+     */
+    public static Observable<Long> countDown(final long totalTime, long interval, TimeUnit unit) {
+        return Observable.interval(0, interval, unit)
+                .take((int) Math.floor(totalTime / (double) interval) + 1)
+                .map(new Func1<Long, Long>() {
+                    @Override
+                    public Long call(Long time) {
+                        return totalTime - time;
+                    }
+                })
+                .compose(RxSchedulerUtils.<Long>_io_main());
     }
 
     //========================延迟操作==========================//
@@ -370,7 +413,5 @@ public final class RxJavaUtils {
                 .compose(RxSchedulerUtils.<R>_io_main())
                 .subscribe(subscriber);
     }
-
-
 
 }

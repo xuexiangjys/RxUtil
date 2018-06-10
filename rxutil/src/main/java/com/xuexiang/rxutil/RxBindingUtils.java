@@ -24,6 +24,7 @@ import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxbinding.widget.AdapterViewItemClickEvent;
 import com.jakewharton.rxbinding.widget.RxAdapterView;
 import com.jakewharton.rxbinding.widget.RxTextView;
+import com.xuexiang.rxutil.rxjava.RxOperationUtils;
 import com.xuexiang.rxutil.subsciber.SimpleThrowableAction;
 
 import java.util.concurrent.TimeUnit;
@@ -68,7 +69,7 @@ public final class RxBindingUtils {
      */
     public static Observable<Void> setViewClicks(View v, long duration, TimeUnit unit) {
         return RxView.clicks(v)
-                .throttleFirst(duration, unit)//取1s间隔内最后一次事件
+                .compose(RxOperationUtils.<Void>_throttleFirst(duration, unit))
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
@@ -86,10 +87,10 @@ public final class RxBindingUtils {
     /**
      * 简单的控件点击监听
      *
-     * @param v           监听控件
-     * @param duration    点击时间间隔
-     * @param unit        时间间隔单位
-     * @param action1     监听事件
+     * @param v        监听控件
+     * @param duration 点击时间间隔
+     * @param unit     时间间隔单位
+     * @param action1  监听事件
      * @return
      */
     public static Subscription setViewClicks(View v, long duration, TimeUnit unit, Action1<Void> action1) {
@@ -138,6 +139,7 @@ public final class RxBindingUtils {
     }
 
     //========================变化事件=============================//
+
     /**
      * 简单的文字变化监听
      *
@@ -148,8 +150,23 @@ public final class RxBindingUtils {
      */
     public static Observable<CharSequence> textChanges(TextView textView, long timeout, TimeUnit unit) {
         return RxTextView.textChanges(textView)
-                .debounce(timeout, unit)
+                .compose(RxOperationUtils.<CharSequence>_debounce(timeout, unit))
+                .skip(1) //跳过第1次数据发射 = 初始输入框的空字符状态
                 .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    /**
+     * 简单的文字变化监听
+     *
+     * @param textView 监听控件
+     * @param timeout  响应的间隔
+     * @param unit     时间间隔单位
+     * @param action1  响应的动作
+     * @return
+     */
+    public static Subscription textChanges(TextView textView, long timeout, TimeUnit unit, Action1<CharSequence> action1) {
+        return textChanges(textView, timeout, unit)
+                .subscribe(action1, new SimpleThrowableAction(TAG));
     }
 
 }

@@ -17,15 +17,17 @@
 package com.xuexiang.rxutildemo.activity;
 
 import android.widget.Button;
-import android.widget.Toast;
+import android.widget.EditText;
 
 import com.xuexiang.rxutil.RxBindingUtils;
+import com.xuexiang.rxutil.rxjava.SubscriptionPool;
 import com.xuexiang.rxutildemo.R;
 import com.xuexiang.rxutildemo.base.BaseActivity;
 
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
+import rx.Subscription;
 import rx.functions.Action1;
 
 /**
@@ -36,6 +38,8 @@ public class RxBindingActivity extends BaseActivity {
 
     @BindView(R.id.btn_click)
     Button mBtnClick;
+    @BindView(R.id.et_input)
+    EditText mEtInput;
 
     /**
      * 布局的资源id
@@ -66,5 +70,19 @@ public class RxBindingActivity extends BaseActivity {
                 toast("触发点击");
             }
         });
+
+        SubscriptionPool.get().add(RxBindingUtils.textChanges(mEtInput, 1, TimeUnit.SECONDS, new Action1<CharSequence>() {
+            @Override
+            public void call(CharSequence charSequence) {
+                toast("输入内容:" + charSequence);
+            }
+        }), "textChanges");
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        SubscriptionPool.get().remove("textChanges");
+        super.onDestroy();
     }
 }
