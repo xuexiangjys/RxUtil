@@ -116,6 +116,15 @@ public final class RxJavaUtils {
      * 轮询操作
      *
      * @param interval 轮询间期
+     */
+    public static Observable<Long> polling(long interval) {
+        return polling(0, interval, TimeUnit.SECONDS);
+    }
+
+    /**
+     * 轮询操作
+     *
+     * @param interval 轮询间期
      * @param action1  监听事件
      */
     public static Subscription polling(long interval, @NonNull Action1<Long> action1) {
@@ -131,6 +140,18 @@ public final class RxJavaUtils {
      */
     public static Subscription polling(long initialDelay, long interval, @NonNull Action1<Long> action1) {
         return polling(initialDelay, interval, TimeUnit.SECONDS, action1, new SimpleThrowableAction(TAG));
+    }
+
+    /**
+     * 轮询操作
+     *
+     * @param initialDelay 初始延迟
+     * @param interval     轮询间期
+     * @param unit         轮询间期时间单位
+     */
+    public static Observable<Long> polling(long initialDelay, long interval, TimeUnit unit) {
+        return Observable.interval(initialDelay, interval, unit)
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     /**
@@ -192,6 +213,16 @@ public final class RxJavaUtils {
     }
 
     //========================延迟操作==========================//
+    /**
+     * 延迟操作
+     *
+     * @param delayTime   延迟时间
+     * @param unit        延迟时间单位
+     */
+    public static Observable<Long> delay(long delayTime, TimeUnit unit) {
+        return Observable.timer(delayTime, unit)
+                .observeOn(AndroidSchedulers.mainThread());
+    }
 
     /**
      * 延迟操作
@@ -314,7 +345,6 @@ public final class RxJavaUtils {
     public static <T, R> Subscription executeAsyncTask(@NonNull T t, @NonNull Observable.Transformer<T, R> transformer, @NonNull BaseSubscriber<R> subscriber) {
         return executeAsyncTask(t, transformer).subscribe(subscriber);
     }
-
 
     //=====================集合、数组遍历处理=========================//
 

@@ -26,8 +26,8 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.squareup.leakcanary.RefWatcher;
+import com.xuexiang.rxutil.lifecycle.RxLifecycle;
 import com.xuexiang.rxutildemo.App;
-import com.xuexiang.rxutildemo.activity.RxJavaActivity;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -43,6 +43,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(getLayoutId());
+        RxLifecycle.injectRxLifecycle(this);
+
         mUnbinder = ButterKnife.bind(this);
         initArgs();
         initViews();
