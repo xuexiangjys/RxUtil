@@ -16,16 +16,15 @@
 
 package com.xuexiang.rxutil.subsciber;
 
-import android.util.Log;
-
 import com.xuexiang.rxutil.logs.RxLog;
 
 import rx.functions.Action1;
 
 /**
  * 简单的出错处理（把错误打印出来）
+ *
  * @author xuexiang
- * @date 2018/3/4 上午12:46
+ * @since 2018/6/10 下午7:10
  */
 public final class SimpleThrowableAction implements Action1<Throwable> {
 

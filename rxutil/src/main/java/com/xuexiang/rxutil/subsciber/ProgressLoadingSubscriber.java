@@ -25,7 +25,7 @@ import com.xuexiang.rxutil.subsciber.impl.OnProgressCancelListener;
  * 实现带有进度加载的订阅【进度条加载者实现接口】
  *
  * @author xuexiang
- * @date 2018/3/10 上午12:50
+ * @since 2018/6/10 下午7:11
  */
 public abstract class ProgressLoadingSubscriber<T> extends BaseSubscriber<T> implements OnProgressCancelListener {
     /**

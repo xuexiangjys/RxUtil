@@ -20,7 +20,7 @@ package com.xuexiang.rxutil.logs;
  * 简易的日志记录接口
  *
  * @author xuexiang
- * @date 2018/3/8 下午9:00
+ * @since 2018/6/10 下午7:14
  */
 public interface ILogger {
 

@@ -29,7 +29,7 @@ import android.support.annotation.NonNull;
  * RxBus事件通知工具
  *
  * @author xuexiang
- * @date 2018/3/1 上午10:30
+ * @since 2018/6/10 下午7:13
  */
 public class RxBus {
 

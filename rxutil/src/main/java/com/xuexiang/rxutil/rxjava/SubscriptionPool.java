@@ -29,7 +29,7 @@ import rx.subscriptions.CompositeSubscription;
  * RxJava订阅池
  *
  * @author xuexiang
- * @date 2018/3/3 下午3:39
+ * @since 2018/6/10 下午7:12
  */
 public class SubscriptionPool {
 

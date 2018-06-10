@@ -27,7 +27,7 @@ import com.xuexiang.rxutil.subsciber.impl.OnProgressCancelListener;
  * 默认进度加载
  *
  * @author xuexiang
- * @date 2018/3/10 上午1:02
+ * @since 2018/6/10 下午7:11
  */
 public class ProgressDialogLoader implements IProgressLoader {
     /**

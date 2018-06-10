@@ -20,8 +20,9 @@ import com.xuexiang.rxutil.rxjava.impl.IRxUITask;
 
 /**
  * UI线程中操作的任务
+ *
  * @author xuexiang
- * @date 2018/3/8 下午3:03
+ * @since 2018/6/10 下午7:15
  */
 public abstract class RxUITask<T> implements IRxUITask<T> {
     /**

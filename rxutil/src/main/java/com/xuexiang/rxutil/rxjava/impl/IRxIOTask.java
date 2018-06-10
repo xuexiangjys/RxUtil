@@ -18,8 +18,9 @@ package com.xuexiang.rxutil.rxjava.impl;
 
 /**
  * 在IO线程中执行的任务
+ *
  * @author xuexiang
- * @date 2018/3/8 下午2:09
+ * @since 2018/6/10 下午7:15
  */
 public interface IRxIOTask<T, R> {
 

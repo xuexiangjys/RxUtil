@@ -21,8 +21,9 @@ import com.xuexiang.rxutil.logs.RxLog;
 
 /**
  * 简单的订阅者
+ *
  * @author xuexiang
- * @date 2018/3/9 下午12:09
+ * @since 2018/6/10 下午7:11
  */
 public abstract class SimpleSubscriber<T> extends BaseSubscriber<T> {
     /**

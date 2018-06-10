@@ -20,8 +20,9 @@ import java.util.Arrays;
 
 /**
  * 万能的事件对象
+ *
  * @author xuexiang
- * @date 2018/3/26 下午11:01
+ * @since 2018/6/10 下午7:13
  */
 public class Event {
     /**

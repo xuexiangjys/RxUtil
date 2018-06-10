@@ -18,8 +18,9 @@ package com.xuexiang.rxutil.subsciber.impl;
 
 /**
  * 进度条加载者实现接口
+ *
  * @author xuexiang
- * @date 2018/3/10 上午12:50
+ * @since 2018/6/10 下午7:12
  */
 public interface IProgressLoader {
     /**

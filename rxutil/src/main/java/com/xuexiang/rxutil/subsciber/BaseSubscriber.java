@@ -24,8 +24,9 @@ import rx.Subscriber;
 
 /**
  * 基础订阅者
+ *
  * @author xuexiang
- * @date 2018/3/9 上午9:00
+ * @since 2018/6/10 下午7:11
  */
 public abstract class BaseSubscriber<T> extends Subscriber<T> {
 

@@ -18,10 +18,12 @@ package com.xuexiang.rxutil;
 
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.TextView;
 
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxbinding.widget.AdapterViewItemClickEvent;
 import com.jakewharton.rxbinding.widget.RxAdapterView;
+import com.jakewharton.rxbinding.widget.RxTextView;
 import com.xuexiang.rxutil.subsciber.SimpleThrowableAction;
 
 import java.util.concurrent.TimeUnit;
@@ -35,10 +37,16 @@ import rx.functions.Action1;
  * RxBinding工具
  *
  * @author xuexiang
- * @date 2018/3/4 上午12:23
+ * @since 2018/6/10 下午7:10
  */
 public final class RxBindingUtils {
     private final static String TAG = "RxBindingUtils";
+
+    private RxBindingUtils() {
+        throw new UnsupportedOperationException("u can't instantiate me...");
+    }
+
+    //========================点击事件=============================//
 
     /**
      * 自定义控件监听
@@ -127,6 +135,21 @@ public final class RxBindingUtils {
                 .throttleFirst(duration, unit)//取1s间隔内最后一次事件
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(action1, errorAction);
+    }
+
+    //========================变化事件=============================//
+    /**
+     * 简单的文字变化监听
+     *
+     * @param textView 监听控件
+     * @param timeout  响应的间隔
+     * @param unit     时间间隔单位
+     * @return
+     */
+    public static Observable<CharSequence> textChanges(TextView textView, long timeout, TimeUnit unit) {
+        return RxTextView.textChanges(textView)
+                .debounce(timeout, unit)
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
 }

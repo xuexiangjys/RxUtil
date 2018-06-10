@@ -33,7 +33,7 @@ import rx.subscriptions.CompositeSubscription;
  * RxBus辅助工具类
  *
  * @author xuexiang
- * @date 2018/3/1 上午10:41
+ * @since 2018/6/10 下午7:13
  */
 public class RxBusUtils {
     private final static String TAG = "RxBusUtils";

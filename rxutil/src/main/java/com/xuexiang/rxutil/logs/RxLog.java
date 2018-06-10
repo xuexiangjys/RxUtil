@@ -24,7 +24,7 @@ import android.util.Log;
  * RxLog日志记录
  *
  * @author xuexiang
- * @date 2018/3/9 上午12:29
+ * @since 2018/6/10 下午7:14
  */
 public final class RxLog {
 

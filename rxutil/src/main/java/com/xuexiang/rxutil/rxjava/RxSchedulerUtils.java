@@ -22,10 +22,15 @@ import rx.schedulers.Schedulers;
 
 /**
  * 线程调度工具
- * @author XUE
- * @date 2017/7/3 16:01
+ *
+ * @author xuexiang
+ * @since 2018/6/10 下午7:10
  */
 public final class RxSchedulerUtils {
+
+    private RxSchedulerUtils() {
+        throw new UnsupportedOperationException("u can't instantiate me...");
+    }
 
     /**
      * 回到主线程

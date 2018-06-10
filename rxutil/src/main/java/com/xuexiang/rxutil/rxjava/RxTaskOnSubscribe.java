@@ -20,8 +20,9 @@ import rx.Observable;
 
 /**
  * 在订阅时执行的回调
+ *
  * @author xuexiang
- * @date 2018/3/8 下午2:24
+ * @since 2018/6/10 下午7:12
  */
 public abstract class RxTaskOnSubscribe<T> implements Observable.OnSubscribe<T> {
     /**
