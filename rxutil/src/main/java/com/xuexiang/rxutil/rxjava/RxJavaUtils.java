@@ -248,6 +248,34 @@ public final class RxJavaUtils {
                 .subscribe(action1, errorAction);
     }
 
+    /**
+     * 延迟操作
+     *
+     * @param t          发射源
+     * @param delayTime  延迟时间
+     * @param unit       延迟时间单位
+     */
+    public static <T> Observable<T> delay(@NonNull T t, long delayTime, @NonNull TimeUnit unit) {
+        return Observable.just(t)
+                .delay(delayTime, unit)
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    /**
+     * 延迟操作
+     *
+     * @param t          发射源
+     * @param delayTime  延迟时间
+     * @param unit       延迟时间单位
+     * @param subscriber 订阅的事件
+     */
+    public static <T> Subscription delay(@NonNull T t, long delayTime, @NonNull TimeUnit unit, @NonNull BaseSubscriber<T> subscriber) {
+        return Observable.just(t)
+                .delay(delayTime, unit)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(subscriber);
+    }
+
     //=====================AsyncTask=========================//
 
     /**
