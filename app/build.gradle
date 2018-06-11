@@ -60,8 +60,9 @@ dependencies {
     //rxbinding的sdk
     implementation 'com.jakewharton.rxbinding:rxbinding:1.0.1'
 
-    implementation project(':rxutil')
-//    implementation 'com.github.xuexiangjys:RxUtil:1.1'
+//    implementation project(':rxutil')
+    
+    implementation 'com.github.xuexiangjys:RxUtil:1.1.2'
 
     //leak
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.4'
