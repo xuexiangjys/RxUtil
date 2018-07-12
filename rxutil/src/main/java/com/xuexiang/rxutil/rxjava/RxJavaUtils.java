@@ -27,6 +27,7 @@ import com.xuexiang.rxutil.subsciber.SimpleThrowableAction;
 
 import java.util.concurrent.TimeUnit;
 
+import rx.Emitter;
 import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
@@ -299,9 +300,8 @@ public final class RxJavaUtils {
      */
     public static <T, R> Subscription executeAsyncTask(@NonNull RxAsyncTask<T, R> rxTask, @NonNull Action1<Throwable> errorAction) {
         RxTaskOnSubscribe<RxAsyncTask<T, R>> onSubscribe = getRxAsyncTaskOnSubscribe(rxTask);
-        return Observable.create(onSubscribe)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+        return Observable.create(onSubscribe, Emitter.BackpressureMode.LATEST)
+                .compose(RxSchedulerUtils.<RxAsyncTask<T, R>>_io_main())
                 .subscribe(new Action1<RxAsyncTask<T, R>>() {
                     @Override
                     public void call(RxAsyncTask<T, R> rxAsyncTask) {
@@ -314,11 +314,11 @@ public final class RxJavaUtils {
     private static <T, R> RxTaskOnSubscribe<RxAsyncTask<T, R>> getRxAsyncTaskOnSubscribe(@NonNull final RxAsyncTask<T, R> rxTask) {
         return new RxTaskOnSubscribe<RxAsyncTask<T, R>>(rxTask) {
             @Override
-            public void call(Subscriber<? super RxAsyncTask<T, R>> subscriber) {
+            public void call(Emitter<RxAsyncTask<T, R>> rxAsyncTaskEmitter) {
                 RxAsyncTask<T, R> task = getTask();
                 task.setOutData(task.doInIOThread(task.getInData()));  //在io线程工作
-                subscriber.onNext(task);
-                subscriber.onCompleted();
+                rxAsyncTaskEmitter.onNext(task);
+                rxAsyncTaskEmitter.onCompleted();
             }
         };
     }

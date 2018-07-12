@@ -16,7 +16,8 @@
 
 package com.xuexiang.rxutil.rxjava;
 
-import rx.Observable;
+import rx.Emitter;
+import rx.functions.Action1;
 
 /**
  * 在订阅时执行的回调
@@ -24,7 +25,7 @@ import rx.Observable;
  * @author xuexiang
  * @since 2018/6/10 下午7:12
  */
-public abstract class RxTaskOnSubscribe<T> implements Observable.OnSubscribe<T> {
+public abstract class RxTaskOnSubscribe<T> implements Action1<Emitter<T>> {
     /**
      * 在订阅时执行的任务
      */
