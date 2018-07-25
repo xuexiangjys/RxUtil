@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.xuexiang.rxutil.lifecycle.RxLifecycle;
 import com.xuexiang.rxutil.logs.RxLog;
 import com.xuexiang.rxutil.rxjava.RxJavaUtils;
+import com.xuexiang.rxutil.rxjava.RxSchedulerUtils;
 import com.xuexiang.rxutil.rxjava.SubscriptionPool;
 import com.xuexiang.rxutil.rxjava.task.RxAsyncTask;
 import com.xuexiang.rxutil.rxjava.task.RxIOTask;
@@ -35,12 +36,15 @@ import com.xuexiang.rxutil.subsciber.SimpleSubscriber;
 import com.xuexiang.rxutil.subsciber.impl.IProgressLoader;
 import com.xuexiang.rxutildemo.R;
 import com.xuexiang.rxutildemo.base.BaseActivity;
+import com.xuexiang.xutil.system.AppExecutors;
+import com.xuexiang.xutil.tip.ToastUtils;
 
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 import rx.Observable;
+import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
 
@@ -73,7 +77,7 @@ public class RxJavaActivity extends BaseActivity {
 
     }
 
-    @OnClick({R.id.btn_do_in_io, R.id.btn_do_in_ui, R.id.btn_do_in_io_ui, R.id.btn_loading, R.id.btn_polling, R.id.btn_count_down, R.id.btn_foreach})
+    @OnClick({R.id.btn_do_in_io, R.id.btn_do_in_ui, R.id.btn_do_in_io_ui, R.id.btn_loading, R.id.btn_polling, R.id.btn_count_down, R.id.btn_foreach, R.id.btn_oom_test, R.id.btn_oom_resolve})
     void OnClick(View v) {
         switch (v.getId()) {
             case R.id.btn_do_in_io:
@@ -188,10 +192,60 @@ public class RxJavaActivity extends BaseActivity {
 //                    }
 //                });
                 break;
+            case R.id.btn_oom_test:
+                for (int i = 0; i < 10000; i++) {
+                    test();
+                }
+                break;
+            case R.id.btn_oom_resolve:
+                for (int i = 0; i < 10000; i++) {
+                    testResolve();
+                }
+                break;
             default:
                 break;
         }
 
+    }
+
+    private void test() {
+        Observable.create(new Observable.OnSubscribe<Integer>() {
+            @Override
+            public void call(Subscriber<? super Integer> subscriber) {
+                try {
+                    Thread.sleep(100000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                subscriber.onNext(3);
+                subscriber.onCompleted();
+            }
+        }).compose(RxSchedulerUtils.<Integer>_io_main()).subscribe(new SimpleSubscriber<Integer>() {
+            @Override
+            public void onNext(Integer integer) {
+                ToastUtils.toast("索引:" + integer);
+            }
+        });
+    }
+
+    private void testResolve() {
+        Observable.create(new Observable.OnSubscribe<Integer>() {
+            @Override
+            public void call(Subscriber<? super Integer> subscriber) {
+                try {
+                    Thread.sleep(100000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                subscriber.onNext(3);
+                subscriber.onCompleted();
+            }
+        }).compose(RxSchedulerUtils.<Integer>_io_main(AppExecutors.get().poolIO())).subscribe(new SimpleSubscriber<Integer>() {
+            @Override
+            public void onNext(Integer integer) {
+                ToastUtils.toast("索引:" + integer);
+            }
+        });
     }
 
     /**

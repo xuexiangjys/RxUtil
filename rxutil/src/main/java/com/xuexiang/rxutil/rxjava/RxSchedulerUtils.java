@@ -16,6 +16,8 @@
 
 package com.xuexiang.rxutil.rxjava;
 
+import java.util.concurrent.Executor;
+
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -55,11 +57,12 @@ public final class RxSchedulerUtils {
     /**
      * 订阅发生在主线程 （  ->  -> main)
      * 使用compose操作符
+     *
      * @param <T>
      * @return
      */
     public static <T> Observable.Transformer<T, T> _main() {
-        return new Observable.Transformer<T, T>(){
+        return new Observable.Transformer<T, T>() {
             @Override
             public Observable<T> call(Observable<T> tObservable) {
                 return RxSchedulerUtils.toMain(tObservable);
@@ -70,11 +73,12 @@ public final class RxSchedulerUtils {
     /**
      * 订阅发生在io线程 （  ->  -> io)
      * 使用compose操作符
+     *
      * @param <T>
      * @return
      */
     public static <T> Observable.Transformer<T, T> _io() {
-        return new Observable.Transformer<T, T>(){
+        return new Observable.Transformer<T, T>() {
             @Override
             public Observable<T> call(Observable<T> tObservable) {
                 return RxSchedulerUtils.toIo(tObservable);
@@ -84,6 +88,7 @@ public final class RxSchedulerUtils {
 
     /**
      * 处理在io线程，订阅发生在主线程（ -> io -> main)
+     *
      * @param <T>
      * @return
      */
@@ -101,6 +106,7 @@ public final class RxSchedulerUtils {
 
     /**
      * 处理在io线程，订阅也发生在io线程（ -> io -> io)
+     *
      * @param <T>
      * @return
      */
@@ -115,5 +121,62 @@ public final class RxSchedulerUtils {
             }
         };
     }
+
+
+    /**
+     * 订阅发生在io线程 （  ->  -> io)
+     * 使用compose操作符
+     *
+     * @param executor 线程池
+     * @param <T>
+     * @return
+     */
+    public static <T> Observable.Transformer<T, T> _io(final Executor executor) {
+        return new Observable.Transformer<T, T>() {
+            @Override
+            public Observable<T> call(Observable<T> tObservable) {
+                return tObservable.observeOn(Schedulers.from(executor));
+            }
+        };
+    }
+
+    /**
+     * 处理在io线程，订阅发生在主线程（ -> io -> main)
+     *
+     * @param executor 线程池
+     * @param <T>
+     * @return
+     */
+    public static <T> Observable.Transformer<T, T> _io_main(final Executor executor) {
+        return new Observable.Transformer<T, T>() {
+            @Override
+            public Observable<T> call(Observable<T> tObservable) {
+                return tObservable
+                        .subscribeOn(Schedulers.from(executor))
+                        .unsubscribeOn(Schedulers.from(executor))
+                        .observeOn(AndroidSchedulers.mainThread());
+            }
+        };
+    }
+
+    /**
+     * 处理在io线程，订阅也发生在io线程（ -> io -> io)
+     *
+     * @param executor 线程池
+     * @param <T>
+     * @return
+     */
+    public static <T> Observable.Transformer<T, T> _io_io(final Executor executor) {
+        return new Observable.Transformer<T, T>() {
+            @Override
+            public Observable<T> call(Observable<T> tObservable) {
+                return tObservable
+                        .subscribeOn(Schedulers.from(executor))
+                        .unsubscribeOn(Schedulers.from(executor))
+                        .observeOn(Schedulers.from(executor));
+            }
+        };
+    }
+
 
 }
