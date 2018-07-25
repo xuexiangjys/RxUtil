@@ -240,7 +240,9 @@ public class RxJavaActivity extends BaseActivity {
                 subscriber.onNext(3);
                 subscriber.onCompleted();
             }
-        }).compose(RxSchedulerUtils.<Integer>_io_main(AppExecutors.get().poolIO())).subscribe(new SimpleSubscriber<Integer>() {
+        }).compose(RxSchedulerUtils.<Integer>_io_main(AppExecutors.get().poolIO()))
+                .compose(RxLifecycle.with(this).<Integer>bindToLifecycle())
+                .subscribe(new SimpleSubscriber<Integer>() {
             @Override
             public void onNext(Integer integer) {
                 ToastUtils.toast("索引:" + integer);
