@@ -54,7 +54,7 @@ dependencies {
    //rxbinding的sdk
    implementation 'com.jakewharton.rxbinding:rxbinding:1.0.1'
 
-   implementation 'com.github.xuexiangjys:RxUtil:1.1.2'
+   implementation 'com.github.xuexiangjys:RxUtil:1.1.3'
 }
 ```
 ### 3.1、RxBus使用
@@ -259,6 +259,18 @@ RxBindingUtils.textChanges(mEtInput, 1, TimeUnit.SECONDS, new Action1<CharSequen
 
 ```
 
+5. 自定义线程池
+
+由于`Schedulers.io()`内部使用的是`CachedWorkerPool`，而他最终创建线程池的方法是`newScheduledThreadPool`，它是一个核心只有1个线程，有效时间为60s，但是线程池的线程容纳数量是`Integer.MAX_VALUE`的线程池。
+
+如果线程在执行的过程中发生了长时间的阻塞，导致线程一直在工作状态的话，线程池将无法回收线程，只能不断地创建线程，最终有可能造成线程创建的数量过多，导致程序OOM。
+
+使用`RxSchedulerUtils`进行切换时，可传入`Executor`更换工作线程池：
+
+```
+.compose(RxSchedulerUtils.<Integer>_io_main(AppExecutors.get().poolIO()))
+```
+
 ### 3.6、RxLifecycle使用
 
 1.使用`RxLifecycle.injectRxLifecycle`进行生命周期的绑定。
@@ -306,7 +318,7 @@ RxJavaUtils.polling(5)
 
 ![](https://github.com/xuexiangjys/XPage/blob/master/img/qq_group.jpg)
 
-[rxSvg]: https://img.shields.io/badge/RxUtil-1.1.2-brightgreen.svg
+[rxSvg]: https://img.shields.io/badge/RxUtil-1.1.3-brightgreen.svg
 [rx]: https://github.com/xuexiangjys/RxUtil
 [apiSvg]: https://img.shields.io/badge/API-14+-brightgreen.svg
 [api]: https://android-arsenal.com/api?level=14
