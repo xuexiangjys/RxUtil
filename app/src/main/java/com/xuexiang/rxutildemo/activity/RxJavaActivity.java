@@ -98,7 +98,7 @@ public class RxJavaActivity extends BaseActivity {
                 });
                 break;
             case R.id.btn_do_in_io_ui:
-                RxJavaUtils.executeAsyncTask(new RxAsyncTask<String, Integer>("我是入参789") {
+                RxJavaUtils.executeAsyncTask(AppExecutors.get().poolIO(), new RxAsyncTask<String, Integer>("我是入参789") {
                     @Override
                     public Integer doInIOThread(String s) {
                         Log.e(TAG, "[doInIOThread]  " + getLooperStatus() + ", 入参:" + s);

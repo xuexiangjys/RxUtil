@@ -25,6 +25,7 @@ import com.xuexiang.rxutil.rxjava.task.RxUITask;
 import com.xuexiang.rxutil.subsciber.BaseSubscriber;
 import com.xuexiang.rxutil.subsciber.SimpleThrowableAction;
 
+import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
 
 import rx.Emitter;
@@ -214,11 +215,12 @@ public final class RxJavaUtils {
     }
 
     //========================延迟操作==========================//
+
     /**
      * 延迟操作
      *
-     * @param delayTime   延迟时间
-     * @param unit        延迟时间单位
+     * @param delayTime 延迟时间
+     * @param unit      延迟时间单位
      */
     public static Observable<Long> delay(long delayTime, TimeUnit unit) {
         return Observable.timer(delayTime, unit)
@@ -252,9 +254,9 @@ public final class RxJavaUtils {
     /**
      * 延迟操作
      *
-     * @param t          发射源
-     * @param delayTime  延迟时间
-     * @param unit       延迟时间单位
+     * @param t         发射源
+     * @param delayTime 延迟时间
+     * @param unit      延迟时间单位
      */
     public static <T> Observable<T> delay(@NonNull T t, long delayTime, @NonNull TimeUnit unit) {
         return Observable.just(t)
@@ -293,15 +295,40 @@ public final class RxJavaUtils {
     /**
      * 执行Rx通用任务 (IO线程中执行耗时操作 执行完成调用UI线程中的方法)
      *
+     * @param executor    指定执行任务的线程池
+     * @param rxTask 执行任务
+     * @param <T>
+     * @return
+     */
+    public static <T, R> Subscription executeAsyncTask(final Executor executor, @NonNull RxAsyncTask<T, R> rxTask) {
+        return executeAsyncTask(executor, rxTask, new SimpleThrowableAction(TAG));
+    }
+
+    /**
+     * 执行Rx通用任务 (IO线程中执行耗时操作 执行完成调用UI线程中的方法)
+     *
      * @param rxTask      执行任务
      * @param errorAction 出错的处理
      * @param <T>
      * @return
      */
     public static <T, R> Subscription executeAsyncTask(@NonNull RxAsyncTask<T, R> rxTask, @NonNull Action1<Throwable> errorAction) {
+        return executeAsyncTask(null, rxTask, errorAction);
+    }
+
+    /**
+     * 执行Rx通用任务 (IO线程中执行耗时操作 执行完成调用UI线程中的方法)
+     *
+     * @param executor    指定执行任务的线程池
+     * @param rxTask      执行任务
+     * @param errorAction 出错的处理
+     * @param <T>
+     * @return
+     */
+    public static <T, R> Subscription executeAsyncTask(final Executor executor, @NonNull RxAsyncTask<T, R> rxTask, @NonNull Action1<Throwable> errorAction) {
         RxTaskOnSubscribe<RxAsyncTask<T, R>> onSubscribe = getRxAsyncTaskOnSubscribe(rxTask);
         return Observable.create(onSubscribe, Emitter.BackpressureMode.LATEST)
-                .compose(RxSchedulerUtils.<RxAsyncTask<T, R>>_io_main())
+                .compose(executor == null ? RxSchedulerUtils.<RxAsyncTask<T, R>>_io_main() : RxSchedulerUtils.<RxAsyncTask<T, R>>_io_main(executor))
                 .subscribe(new Action1<RxAsyncTask<T, R>>() {
                     @Override
                     public void call(RxAsyncTask<T, R> rxAsyncTask) {
