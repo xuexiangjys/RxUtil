@@ -1,9 +1,9 @@
 # RxUtil
 [![RxUtil][rxSvg]][rx]  [![api][apiSvg]][api]
 
-一个实用的RxJava1工具类库
+[DEPRECATED]一个实用的RxJava1工具类库
 
-> 如果你使用的是RxJava2，请移步[RxUtil2](https://github.com/xuexiangjys/RxUtil2)
+> 请移步[RxUtil2](https://github.com/xuexiangjys/RxUtil2)
 
 ## 关于我
 [![github](https://img.shields.io/badge/GitHub-xuexiangjys-blue.svg)](https://github.com/xuexiangjys)   [![csdn](https://img.shields.io/badge/CSDN-xuexiangjys-green.svg)](http://blog.csdn.net/xuexiangjys)
